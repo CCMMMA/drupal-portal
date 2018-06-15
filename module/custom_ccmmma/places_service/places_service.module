@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains places_service.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function places_service_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the places_service module.
+    case 'help.page.places_service':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Modulo per la gestione dei services dei places') . '</p>';
+      return $output;
+
+    default:
+  }
+}

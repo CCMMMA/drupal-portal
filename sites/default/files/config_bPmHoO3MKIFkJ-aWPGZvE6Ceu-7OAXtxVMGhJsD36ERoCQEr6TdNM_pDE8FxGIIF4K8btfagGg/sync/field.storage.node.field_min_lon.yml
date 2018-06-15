@@ -1,0 +1,18 @@
+uuid: 257f2ef9-2ebf-46bd-9f00-c689d6a25097
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_min_lon
+field_name: field_min_lon
+entity_type: node
+type: float
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

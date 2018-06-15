@@ -1,0 +1,14 @@
+{
+  "name": "drupal/places_service",
+  "type": "drupal-module",
+  "description": "Modulo per la gestione dei services dei places",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/places_service",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/places_service",
+    "source": "http://cgit.drupalcode.org/places_service"
+  },
+  "require": { }
+}

@@ -1,0 +1,23 @@
+uuid: 410a4749-087d-49bb-9732-502264d95ffa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_max_lat
+    - node.type.place
+id: node.place.field_max_lat
+field_name: field_max_lat
+entity_type: node
+bundle: place
+label: 'Max Lat'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

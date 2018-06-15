@@ -1,0 +1,22 @@
+uuid: 4fa79dc0-2874-4528-8a00-e5a6d5061bf6
+langcode: it
+status: true
+dependencies:
+  config:
+    - block_content.type.blocco_custom
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.blocco_custom.body
+field_name: body
+entity_type: block_content
+bundle: blocco_custom
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

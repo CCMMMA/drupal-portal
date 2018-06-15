@@ -1,0 +1,9 @@
+uuid: a21830d8-3cd6-463d-9000-c05dbf80808e
+langcode: en
+status: true
+dependencies: {  }
+name: Outputs
+vid: outputs
+description: ''
+hierarchy: 0
+weight: 0

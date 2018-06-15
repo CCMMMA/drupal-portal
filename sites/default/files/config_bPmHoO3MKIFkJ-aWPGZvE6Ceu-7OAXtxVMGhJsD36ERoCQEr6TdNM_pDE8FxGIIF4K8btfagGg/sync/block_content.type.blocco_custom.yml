@@ -1,0 +1,8 @@
+uuid: 15bbffb0-c466-4693-8500-c73d11224ee0
+langcode: it
+status: true
+dependencies: {  }
+id: blocco_custom
+label: 'Blocco custom'
+revision: 0
+description: ''

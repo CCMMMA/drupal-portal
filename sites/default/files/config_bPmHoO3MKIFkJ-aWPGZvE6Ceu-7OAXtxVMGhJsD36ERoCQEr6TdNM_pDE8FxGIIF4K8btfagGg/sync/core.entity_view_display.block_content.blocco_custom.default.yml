@@ -1,0 +1,22 @@
+uuid: 6b956ddd-e99f-40e5-8400-eb96600b54ce
+langcode: it
+status: true
+dependencies:
+  config:
+    - block_content.type.blocco_custom
+    - field.field.block_content.blocco_custom.body
+  module:
+    - text
+id: block_content.blocco_custom.default
+targetEntityType: block_content
+bundle: blocco_custom
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

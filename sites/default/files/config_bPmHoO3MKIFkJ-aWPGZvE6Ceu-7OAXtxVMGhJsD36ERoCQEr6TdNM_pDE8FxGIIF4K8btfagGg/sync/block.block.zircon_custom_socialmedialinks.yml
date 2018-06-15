@@ -1,0 +1,77 @@
+uuid: db94fd49-7da5-45b4-9e09-9ca336fdea02
+langcode: en
+status: true
+dependencies:
+  module:
+    - social_media_links
+  theme:
+    - zircon_custom
+id: zircon_custom_socialmedialinks
+theme: zircon_custom
+region: header_right
+weight: -9
+provider: null
+plugin: social_media_links_block
+settings:
+  id: social_media_links_block
+  label: 'SHARE US:'
+  provider: social_media_links
+  label_display: '0'
+  platforms:
+    youtube:
+      value: ''
+      weight: '-10'
+    youtube_channel:
+      value: ''
+      weight: '-9'
+    facebook:
+      value: centrometeocampano
+      weight: '-8'
+    twitter:
+      value: meteoparth
+      weight: '-7'
+    pinterest:
+      value: ''
+      weight: '-6'
+    rss:
+      value: ''
+      weight: '-5'
+    googleplus:
+      value: ''
+      weight: '-4'
+    drupal:
+      value: ''
+      weight: '-3'
+    vimeo:
+      value: ''
+      weight: '-2'
+    tumblr:
+      value: ''
+      weight: '-1'
+    contact:
+      value: ''
+      weight: '0'
+    instagram:
+      value: ''
+      weight: '1'
+    slideshare:
+      value: ''
+      weight: '2'
+    email:
+      value: meteo@uniparthenope.it
+      weight: '3'
+    linkedin:
+      value: ''
+      weight: '4'
+  appearance:
+    orientation: h
+    show_name: 0
+  link_attributes:
+    target: _blank
+    rel: '<none>'
+  iconset:
+    style: 'fontawesome:in'
+    installed_iconsets:
+      fontawesome:
+        examples: ''
+visibility: {  }

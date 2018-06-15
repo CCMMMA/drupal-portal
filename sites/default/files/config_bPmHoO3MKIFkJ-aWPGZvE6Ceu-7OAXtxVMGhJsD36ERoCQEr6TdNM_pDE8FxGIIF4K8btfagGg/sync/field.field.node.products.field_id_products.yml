@@ -1,0 +1,19 @@
+uuid: daeb973e-d533-4435-8200-0d4633971099
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_id_products
+    - node.type.products
+id: node.products.field_id_products
+field_name: field_id_products
+entity_type: node
+bundle: products
+label: ID
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

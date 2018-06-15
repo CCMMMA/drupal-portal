@@ -1,0 +1,25 @@
+uuid: b0544906-32c3-4c0e-a840-640bc236b41e
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - fortytwo
+_core:
+  default_config_hash: NDwadleLD3YVSbDUaakxyYZyINYtkFtOVGShfq4kWy8
+id: fortytwo_branding
+theme: fortytwo
+region: header
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: true
+visibility: {  }

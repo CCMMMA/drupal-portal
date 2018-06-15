@@ -1,0 +1,15 @@
+example.settings:
+  path: '/forecast/forecast'
+  defaults:
+    _form: '\Drupal\forecast_manage\Form\forecastForm'
+    _title: 'Meteo Forecast'
+  requirements:
+    _access: 'TRUE'
+    
+forecast_manage.autocomplete:
+  path: '/forecast/autocomplete'
+  defaults:
+    _controller: '\Drupal\forecast_manage\Controller\ExampleController::autocomplete'
+    _title: 'Forecast Autocomplete'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+ /*
+function first_menu(){
+	//il path DEVE coincidere con quello utilizzato nel file first.routing.yml
+	$items['test_page\%'] = array(
+		'title' => t('First page'),
+		'route_name' => 'first',
+		'page arguments' => array(0),
+	);
+	return $items;
+}
+*/

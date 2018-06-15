@@ -1,0 +1,5 @@
+name: Export places in Json file
+description: 'Modulo per esportare i places in file .json per leaflet map'
+type: module
+core: 8.x
+package: CCMMMA

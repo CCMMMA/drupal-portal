@@ -1,0 +1,5 @@
+name: Import/Update data from Json
+description: 'Modulo per importare i dati da file json'
+type: module
+core: 8.x
+package: CCMMMA

@@ -1,0 +1,19 @@
+uuid: c6536ba9-ebe4-4c5f-bb02-026f5591ba1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_id
+    - taxonomy.vocabulary.domains
+id: taxonomy_term.domains.field_id
+field_name: field_id
+entity_type: taxonomy_term
+bundle: domains
+label: ID
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

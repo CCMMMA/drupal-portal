@@ -1,0 +1,7 @@
+home.content:
+  path: '/home-maps'
+  defaults:
+    _controller: '\Drupal\home\Controller\homeController::content'
+    #_title: 'Home page'
+  requirements:
+    _permission: 'access content'

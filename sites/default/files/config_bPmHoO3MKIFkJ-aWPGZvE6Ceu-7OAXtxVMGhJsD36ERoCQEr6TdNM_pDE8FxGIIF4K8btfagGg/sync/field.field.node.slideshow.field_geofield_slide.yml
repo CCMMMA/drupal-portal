@@ -1,0 +1,21 @@
+uuid: 7bf16cb0-0d41-4f1d-9c08-8ffebd2f1179
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geofield_slide
+    - node.type.slideshow
+  module:
+    - geofield
+id: node.slideshow.field_geofield_slide
+field_name: field_geofield_slide
+entity_type: node
+bundle: slideshow
+label: Geofield
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: geofield

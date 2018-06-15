@@ -1,0 +1,35 @@
+global-styling-custom:
+  version: 8.0.0
+  css:
+    base:
+      css/style.css: {}
+      js/lightbox/css/lightbox.css: {}
+      js/leaflet/leaflet.css: {}
+      js/markercluster/css/MarkerCluster.css: {}
+      js/markercluster/css/MarkerCluster.Default.css: {}
+      
+  js:
+    js/lightbox/js/lightbox.js: {}
+    js/leaflet/leaflet.js: {}
+    js/leaflet/leaflet.groupedlayercontrol.js: {}
+    js/leaflet/TileLayer.GeoJSON.js: {}
+    js/leaflet/geojson-tiles.js: {}
+    js/mapbox/mapbox.js: {}
+    js/markercluster/DistanceGrid.js: {}
+    js/markercluster/MarkerCluster.js: {}
+    js/markercluster/MarkerCluster.QuickHull.js: {}
+    js/leafletspin/leaflet.spin.js: {}
+    js/leafletspin/spin.js: {}
+    #js/markercluster/MarkerCluster.Spiderfier.js: {}
+    js/markercluster/MarkerClusterGroup.js: {}
+    js/markercluster/MarkerClusterGroup.Refresh.js: {}
+    js/markercluster/MarkerOpacity.js: {}
+    js/markercluster/leaflet.markercluster.js: {}
+    js/moment.js: {}
+    js/leaflet_home.js: {}
+    js/change_hour.js: {} 
+    
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupalSettings

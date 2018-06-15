@@ -1,0 +1,11 @@
+uuid: 63003b6f-451a-4174-8403-3b6174984145
+langcode: it
+status: true
+dependencies:
+  config:
+    - block_content.type.blocco_custom
+id: block_content.blocco_custom
+target_entity_type_id: block_content
+target_bundle: blocco_custom
+default_langcode: site_default
+language_alterable: false

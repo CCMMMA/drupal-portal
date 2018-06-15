@@ -1,0 +1,5 @@
+name: places-service
+type: module
+description: Modulo per la gestione dei services dei places
+core: 8.x
+package: Custom

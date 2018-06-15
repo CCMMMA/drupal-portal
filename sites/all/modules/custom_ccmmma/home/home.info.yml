@@ -1,0 +1,5 @@
+name: home Module
+package: CCMMMA
+description: 'Modulo per gestire la visualizzazione della homepage'
+type: module
+core: 8.x

@@ -1,0 +1,5 @@
+name: Forecast Manage CCMMMA
+description: 'Modulo per gestire i dati meteo dinamici'
+type: module
+core: 8.x
+package: CCMMMA

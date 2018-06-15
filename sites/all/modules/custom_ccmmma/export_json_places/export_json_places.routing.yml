@@ -1,0 +1,7 @@
+export_places_json.export:
+  path: '/export-json'
+  defaults:
+    _form: '\Drupal\export_json_places\ExportJsonForm'
+    _title: 'Export places json file'
+  requirements:
+    _permission: 'administer site configuration'

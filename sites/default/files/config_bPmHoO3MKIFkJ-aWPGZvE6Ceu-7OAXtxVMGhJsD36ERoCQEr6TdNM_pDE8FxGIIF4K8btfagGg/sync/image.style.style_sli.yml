@@ -1,0 +1,14 @@
+uuid: 1c567855-fb59-40ba-b300-e50001ad5ab6
+langcode: en
+status: true
+dependencies: {  }
+name: style_sli
+label: Style-slideshow
+effects:
+  4d0bfbc6-8122-4598-bc00-d308aa0a476e:
+    uuid: 4d0bfbc6-8122-4598-bc00-d308aa0a476e
+    id: image_resize
+    weight: 1
+    data:
+      width: 1170
+      height: 300

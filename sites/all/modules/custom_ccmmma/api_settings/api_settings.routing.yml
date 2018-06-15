@@ -1,0 +1,7 @@
+api.settings:
+  path: '/admin/structure/api/settings'
+  defaults:
+    _form: '\Drupal\api_settings\Form\apiSettingsForm'
+    _title: 'Api settings'
+  requirements:
+    _permission: 'administer site configuration'

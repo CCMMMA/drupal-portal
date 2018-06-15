@@ -1,0 +1,5 @@
+name: API Settings
+description: 'Modulo per gestire le API utilizzate'
+type: module
+core: 8.x
+package: CCMMMA

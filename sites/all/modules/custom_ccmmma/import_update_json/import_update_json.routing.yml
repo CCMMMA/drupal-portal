@@ -1,0 +1,7 @@
+import_update_json.import:
+  path: '/import-json'
+  defaults:
+    _form: '\Drupal\import_update_json\ImportJsonForm'
+    _title: 'Import data from json file'
+  requirements:
+    _permission: 'administer site configuration'

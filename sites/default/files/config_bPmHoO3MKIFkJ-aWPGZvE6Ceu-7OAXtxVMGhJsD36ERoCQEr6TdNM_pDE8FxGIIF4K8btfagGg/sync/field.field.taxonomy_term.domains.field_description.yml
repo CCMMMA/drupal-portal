@@ -1,0 +1,21 @@
+uuid: 32f2efbb-bb96-4afe-8800-a5ed220f38c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_description
+    - taxonomy.vocabulary.domains
+  module:
+    - text
+id: taxonomy_term.domains.field_description
+field_name: field_description
+entity_type: taxonomy_term
+bundle: domains
+label: Description
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

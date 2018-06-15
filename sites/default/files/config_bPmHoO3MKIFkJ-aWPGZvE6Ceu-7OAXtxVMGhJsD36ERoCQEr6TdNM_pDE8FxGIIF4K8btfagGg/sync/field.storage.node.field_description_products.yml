@@ -1,0 +1,19 @@
+uuid: 1cb58adc-1e93-4185-8300-a25d245fd782
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_description_products
+field_name: field_description_products
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
