@@ -27,4 +27,3 @@ class ExampleController extends ControllerBase
   }
 }
   
-  ?>

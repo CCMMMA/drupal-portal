@@ -22,7 +22,7 @@ class mapBlock extends BlockBase {
    */
   public function build() {
     $api = \Drupal::config('api.settings')->get('api');
-    $url_wrf_golfo_napoli = $api.'/products/wrf3/forecast/ca001/map';
+    $url_wrf_golfo_napoli = $api.'/products/wrf5/forecast/ca001/map';
     $url_ww3_golfo_napoli = $api.'/products/ww33/forecast/ca001/map';
     $url_chimere_golfo_napoli = $api.'/products/chm3/forecast/ca001/map?output=gen';
     
@@ -44,6 +44,7 @@ class mapBlock extends BlockBase {
     try{
     $request = $client1->get($url_ww3_golfo_napoli, ['http_errors' => false]);
     $response = json_decode($request->getBody());
+    dpm($response);
     	if(isset($response->map->link)){
 	    	$url_img_ww3 = $response->map->link;
 	   	} else {	    
@@ -133,7 +134,7 @@ class mapBlock extends BlockBase {
     <div style="border: 1px solid black; margin-top:2px; text-align:center;">
     <div class="wrf-title style_title">WRF</div>
     
-    <div class="img-box"><a href="/forecast/forecast?product=wrf3&place=ca000"><img id="imgfor" src="'.$url_img_wrf.'" /></a></div>
+    <div class="img-box"><a href="/forecast/forecast?product=wrf5&place=ca000"><img id="imgfor" src="'.$url_img_wrf.'" /></a></div>
     </div>
     </div>
     

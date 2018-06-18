@@ -50,7 +50,7 @@ class bollettinoBlock extends BlockBase {
     $client = new \GuzzleHttp\Client();
     try {
       $request = $client->get($url_napoli, ['http_errors' => FALSE]);
-      //dpm($url_napoli);
+      //WRF($url_napoli);
       //dpm($list_of_day);
       $response = json_decode($request->getBody());
       if (isset($response->timeseries)) {
@@ -82,7 +82,6 @@ class bollettinoBlock extends BlockBase {
       //dpm($time);
       if (isset($list_of_result[$time])) {
         $result_array = get_object_vars($list_of_result[$time]);
-        dpm($result_array);
         //dpm($result_array);
         if (isset($result_array['icon'])) {
           $data[$string]['icon'] = $result_array['icon'];

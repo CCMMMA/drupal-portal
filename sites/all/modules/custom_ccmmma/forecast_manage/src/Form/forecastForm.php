@@ -86,8 +86,8 @@ class forecastForm extends FormBase {
     foreach($response->outputs as $nome => $value){
       $output_options[$nome] = $value->en;
     }
-    dpm($output_options);
-    dpm($url_get_products);
+    //dpm($output_options);
+    //dpm($url_get_products);
     
     
     //recupero tutti i products disponibili
@@ -114,7 +114,7 @@ class forecastForm extends FormBase {
     dpm($utc);
     */
     
-    dpm('data richiesta: '.$date);
+    //dpm('data richiesta: '.$date);
     
     $date_used = date("Y-m-d", strtotime($date)); //Y-m-d 
     $date_form = $date_used;  //da utilizzare nel form
@@ -180,24 +180,32 @@ class forecastForm extends FormBase {
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
         
-    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map/anim';
-    dpm('chiamata effettuata: '.$url_call);
+    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map';
+    //dpm('chiamata effettuata: '.$url_call);
     //dpm($date);
     
     $client = \Drupal::httpClient();
+
     $request = $client->get($url_call);
     $response = json_decode($request->getBody());
     //dpm($response);
  
     $link_map = NULL;
+
+    if(isset($response->map->link)){
+      $link_map = $response->map->link;
+
+    }
+/*
     foreach($response->data->place->forecast as $value){
       if(property_exists($value, $date)){
         $link_map = $value->$date->map;
         //dpm($link_map);
       }
-    }  
+    }
+*/
    
-    dpm('link alla mappa: '.$link_map);
+    //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){
       $img_result = '<p>Impossibile caricare immagine</p>';
     }
@@ -234,9 +242,11 @@ class forecastForm extends FormBase {
     $id_place = $id_field->value;
     $date = str_replace('-', "", $date);
     $final_date_now = $date.'Z'.$utc.'00';
+
+    $host = \Drupal::request()->getHost();
+
         
-    $form_state->setResponse(new RedirectResponse('http://192.167.9.43/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now.'&utc='.$utc, 302));    
-    //dpm('http://192.167.9.43/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now.'&utc='.$utc);
+    $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now.'&utc='.$utc, 302));
   }
   
   // Ajax Call for output
@@ -252,7 +262,7 @@ class forecastForm extends FormBase {
     $request = $client->get($url_get_outputs);
     $response = json_decode($request->getBody());
     
-    dpm($url_get_outputs);
+    //dpm($url_get_outputs);
     
     foreach($response->outputs as $nome => $value){
       $option_output[$nome] = $value->en;
