@@ -143,10 +143,10 @@ class bollettinoBlock extends BlockBase {
           $data[$string]['temp_min'] = 0;
         }
         if (isset($result_array['t2c-max'])) {
-          $data[$string]['vento_max'] = round($result_array['t2c-max'], 0);
+          $data[$string]['temp_max'] = round($result_array['t2c-max'], 0);
         }
         else {
-          $data[$string]['vento_max'] = 0;
+          $data[$string]['temp_max'] = 0;
         }
         if (isset($result_array['t2c'])) {
           $data[$string]['temp'] = round($result_array['t2c'], 0);
