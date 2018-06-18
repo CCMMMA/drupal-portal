@@ -157,7 +157,7 @@ class bollettinoBlock extends BlockBase {
 
 
         //caso in cui ho solo una temperatura
-        if ($data[$string]['temp_min'] == 0 && $data[$string]['temp_max'] == 0) {
+        if ($data[$string]['temp_min'] == 0 || $data[$string]['temp_max'] == 0) {
           $single_temp_value = 1;
         }
         else {
