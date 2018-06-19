@@ -171,13 +171,13 @@ class forecastForm extends FormBase {
       '#default_value' => $hour_now,
     );
 
-    /*
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Generate'),
       '#button_type' => 'primary',
     );
-    */
+
 
     $form['#attributes']['class'][] = 'form-forecast';
     
