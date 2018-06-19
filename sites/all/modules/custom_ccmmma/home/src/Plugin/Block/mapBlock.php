@@ -44,7 +44,6 @@ class mapBlock extends BlockBase {
     try{
     $request = $client1->get($url_ww3_golfo_napoli, ['http_errors' => false]);
     $response = json_decode($request->getBody());
-    dpm($response);
     	if(isset($response->map->link)){
 	    	$url_img_ww3 = $response->map->link;
 	   	} else {	    

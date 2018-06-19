@@ -40,6 +40,10 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
+    //add forecast library
+    $form['#attached']['library'][] = 'forecast_manage/forecast-library';
+
     $date_now = date('Y-m-d'); // Y-m-d now
     $date_time_series = date('Ymd');  // Ymd
     $hour_now = date('H'); // H
@@ -167,11 +171,13 @@ class forecastForm extends FormBase {
       '#default_value' => $hour_now,
     );
 
+    /*
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Generate'),
       '#button_type' => 'primary',
     );
+    */
 
     $form['#attributes']['class'][] = 'form-forecast';
     
@@ -181,9 +187,7 @@ class forecastForm extends FormBase {
     $api = \Drupal::config('api.settings')->get('api');
         
     $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map';
-    //dpm('chiamata effettuata: '.$url_call);
-    //dpm($date);
-    
+
     $client = \Drupal::httpClient();
 
     $request = $client->get($url_call);

@@ -5,7 +5,6 @@ var api_url_base = "http://193.205.230.6";
   function insert_button() {
     if ($('div.inc').length == 0) {
       $("div.select-hour").append('<div class="inc button">></div><div class="dec button"><</div>');
-      console.log($("form div"));
     }
   }
 
@@ -588,6 +587,8 @@ var api_url_base = "http://193.205.230.6";
 
   Drupal.behaviors.behaviors_leaflet = {
     attach: function (context, settings) {
+
+
       insert_button();
       //Viene eseguito di default
       if ($('.mapid').length) {

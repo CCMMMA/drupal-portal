@@ -1,0 +1,7 @@
+
+forecast-library:
+  varsion: 1.x
+  js:
+    js/forecast.js: {}
+  dependencies:
+      - core/jquery
