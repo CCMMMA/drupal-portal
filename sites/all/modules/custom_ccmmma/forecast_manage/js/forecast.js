@@ -25,7 +25,7 @@ var api_url_base = "http://193.205.230.6";
       function replace_image() {
         values = get_form_values();
         url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map";
-        //console.log(url_call);
+        console.log(url_call);
 
         $.ajax({
           url: url_call,

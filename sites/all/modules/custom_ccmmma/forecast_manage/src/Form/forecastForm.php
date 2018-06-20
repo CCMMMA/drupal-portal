@@ -192,8 +192,7 @@ class forecastForm extends FormBase {
 
     $request = $client->get($url_call);
     $response = json_decode($request->getBody());
-    dpm($url_call);
- 
+
     $link_map = NULL;
 
     if(isset($response->map->link)){
