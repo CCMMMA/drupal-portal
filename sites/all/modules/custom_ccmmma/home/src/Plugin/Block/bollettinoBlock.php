@@ -76,7 +76,7 @@ class bollettinoBlock extends BlockBase {
     //dpm($list_of_result);
     //dpm($list_of_day);
 
-    $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div><div id="oBox_loading" style="display: none;">    <img src="http://meteo.uniparthenope.it/sites/default/files/animated_progress_bar.gif" width="400"></div>';
+    $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div><div id="oBox_loading" style="display: none;">    <img src="/sites/default/files/animated_progress_bar.gif" width="400"></div>';
 
     foreach ($list_of_day as $time => $string) {
       //dpm($time);

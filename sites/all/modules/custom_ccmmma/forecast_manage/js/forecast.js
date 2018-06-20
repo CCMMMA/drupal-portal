@@ -24,7 +24,7 @@ var api_url_base = "http://193.205.230.6";
 
       function replace_image() {
         values = get_form_values();
-        url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map";
+        url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output'];
         console.log(url_call);
 
         $.ajax({
@@ -47,7 +47,13 @@ var api_url_base = "http://193.205.230.6";
 
           $('#forecast-form select').once('#forecast-form').each(function () {
             $(this).change(function () {
-              //console.log('cambio');
+              console.log('cambio');
+              replace_image();
+            });
+
+
+            $('#edit-place').focusout(function(){
+              console.log('cambio');
               replace_image();
             });
           });

@@ -40,7 +40,6 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
     //add forecast library
     $form['#attached']['library'][] = 'forecast_manage/forecast-library';
 
@@ -56,13 +55,14 @@ class forecastForm extends FormBase {
     $output = 'gen';
     $date = $final_date_now;
     $utc = $hour_now;
-    
+
   
     
     
     if(isset($_GET['product']) && !empty($_GET['product'])){
       $prod = $_GET['product'];
     }
+
     if(isset($_GET['place']) && !empty($_GET['place'])){
       $place_id = $_GET['place'];
     }
@@ -97,6 +97,7 @@ class forecastForm extends FormBase {
     //recupero tutti i products disponibili
     $api = \Drupal::config('api.settings')->get('api');
     $url_get_products = $api.'/products';
+    dpm($url_get_products);
     $client = \Drupal::httpClient();
     $request = $client->get($url_get_products);
     $response = json_decode($request->getBody());
@@ -119,8 +120,8 @@ class forecastForm extends FormBase {
     */
     
     //dpm('data richiesta: '.$date);
-    
-    $date_used = date("Y-m-d", strtotime($date)); //Y-m-d 
+
+    $date_used = date("Y-m-d", strtotime($date)); //Y-m-d
     $date_form = $date_used;  //da utilizzare nel form
     $utc_list = range(0, 24);
     
@@ -186,7 +187,7 @@ class forecastForm extends FormBase {
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
         
-    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map';
+    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map?output='.$output;
 
     $client = \Drupal::httpClient();
 
