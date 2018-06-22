@@ -149,7 +149,6 @@ class bollettinoBlock extends BlockBase {
           $data[$string]['pioggia'] = 0;
         }
         if (isset($result_array['t2c-min']) && in_array('t2c-min', $colums_lists) && $colums_lists['t2c-min'] === 't2c-min') {
-          dpm($colums_lists['t2c-min']);
           $data[$string]['temp_min'] = round($result_array['t2c-min'], 0);
         }
         else {
