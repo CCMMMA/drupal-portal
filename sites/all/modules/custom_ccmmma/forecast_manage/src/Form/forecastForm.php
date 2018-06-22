@@ -97,7 +97,7 @@ class forecastForm extends FormBase {
     //recupero tutti i products disponibili
     $api = \Drupal::config('api.settings')->get('api');
     $url_get_products = $api.'/products';
-    dpm($url_get_products);
+    //dpm($url_get_products);
     $client = \Drupal::httpClient();
     $request = $client->get($url_get_products);
     $response = json_decode($request->getBody());

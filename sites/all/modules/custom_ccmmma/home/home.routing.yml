@@ -5,3 +5,12 @@ home.content:
     #_title: 'Home page'
   requirements:
     _permission: 'access content'
+
+
+bollettino-block.settings:
+  path: '/admin/structure/bollettino/settings'
+  defaults:
+    _form: '\Drupal\home\Form\bollettinoSettingsForm'
+    _title: 'Bollettino settings'
+  requirements:
+    _permission: 'administer site configuration'

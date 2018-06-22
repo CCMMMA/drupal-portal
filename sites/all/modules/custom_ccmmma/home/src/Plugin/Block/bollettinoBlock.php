@@ -21,10 +21,23 @@ class bollettinoBlock extends BlockBase {
    */
   public function build() {
 
+    //get place
+    $place_nid = \Drupal::config('bollettino.settings')->get('place');
+    $node_place = entity_load('node', $place_nid);
+
+    //get colum list
+    $colums_lists = \Drupal::config('bollettino.settings')->get('active_colums');
+    dpm($colums_lists);
+
+    //@todo ottenere il place id e settarlo come default
+
+
+
     \Drupal::service('page_cache_kill_switch')->trigger();
     //$build['#cache']['max-age'] = 0;
     $api = \Drupal::config('api.settings')->get('api');
     $url_napoli = $api . '/products/wrf5/timeseries/com63049?step=24&date=' . date('Ymd\Z\0\0', time());
+
 
     //creo un array con 6 date a partire da oggi
     $list_of_day = [];
@@ -83,7 +96,7 @@ class bollettinoBlock extends BlockBase {
       if (isset($list_of_result[$time])) {
         $result_array = get_object_vars($list_of_result[$time]);
         //dpm($result_array);
-        if (isset($result_array['icon'])) {
+        if (isset($result_array['icon']) && in_array('icon', $colums_lists) && $colums_lists['icon'] == 'icon') {
           $data[$string]['icon'] = $result_array['icon'];
           $pos = strpos($data[$string]['icon'], '_night');
           if ($pos) {
@@ -99,26 +112,26 @@ class bollettinoBlock extends BlockBase {
         else {
           $data[$string]['meteo_text'] = '';
         }
-        if (isset($result_array['wd10'])) {
-          $data[$string]['vento_type'] = $result_array['wd10'];
+        if (isset($result_array['wd10']) && in_array('wd10', $colums_lists) && $colums_lists['wd10'] === 'wd10') {
+          $data[$string]['vento_type'] = round($result_array['wd10'], 0);
         }
         else {
           $data[$string]['vento_type'] = '';
         }
-        if (isset($result_array['ws10-max'])) {
+        if (isset($result_array['ws10-max']) && in_array('ws10-max', $colums_lists) && $colums_lists['ws10-max'] === 'ws10-max') {
           $data[$string]['vento_max'] = $result_array['ws10-max'];
         }
         else {
           $data[$string]['vento_max'] = 0;
         }
-        if (isset($result_array['ws10-min'])) {
+        if (isset($result_array['ws10-min']) && in_array('ws10-min', $colums_lists) && $colums_lists['ws10-min'] === 'ws10-min') {
           $data[$string]['vento_min'] = $result_array['ws10-min'];
         }
         else {
           $data[$string]['vento_min'] = 0;
         }
         if ($data[$string]['vento_min'] == 0 && $data[$string]['vento_max'] == 0) {
-          if (isset($result_array['ws10'])) {
+          if (isset($result_array['ws10']) && in_array('ws10', $colums_lists) && $colums_lists['ws10'] === 'ws10') {
             $data[$string]['vento'] = $result_array['ws10'];
           }
           else {
@@ -129,25 +142,26 @@ class bollettinoBlock extends BlockBase {
           $data[$string]['vento'] = round((($data[$string]['vento_max'] + $data[$string]['vento_min']) / 2) * 1.9, 0); //conversione in nodi
         }
 
-        if (isset($result_array['crh'])) {
+        if (isset($result_array['crh']) && in_array('crh', $colums_lists) && $colums_lists['crh'] === 'crh') {
           $data[$string]['pioggia'] = round($result_array['crh'], 1);
         }
         else {
           $data[$string]['pioggia'] = 0;
         }
-        if (isset($result_array['t2c-min'])) {
+        if (isset($result_array['t2c-min']) && in_array('t2c-min', $colums_lists) && $colums_lists['t2c-min'] === 't2c-min') {
+          dpm($colums_lists['t2c-min']);
           $data[$string]['temp_min'] = round($result_array['t2c-min'], 0);
         }
         else {
           $data[$string]['temp_min'] = 0;
         }
-        if (isset($result_array['t2c-max'])) {
+        if (isset($result_array['t2c-max']) && in_array('t2c-max', $colums_lists) && $colums_lists['t2c-max'] === 't2c-max') {
           $data[$string]['temp_max'] = round($result_array['t2c-max'], 0);
         }
         else {
           $data[$string]['temp_max'] = 0;
         }
-        if (isset($result_array['t2c'])) {
+        if (isset($result_array['t2c']) && in_array('t2c', $colums_lists) && $colums_lists['t2c'] === 't2c') {
           $data[$string]['temp'] = round($result_array['t2c'], 0);
         }
         else {
@@ -162,47 +176,69 @@ class bollettinoBlock extends BlockBase {
         else {
           $single_temp_value = 0;
         }
+        //caso in cui ho solo una temperatura
+        if ($data[$string]['vento_min'] == 0 || $data[$string]['vento_max'] == 0) {
+          $single_wind_value = 1;
+        }
+        else {
+          $single_wind_value = 0;
+        }
       }
     }
-    //creazione intestazione tabella
-    if ($single_temp_value) {
-      $markup .= ' 
-    <table id="oBox_table" width="100%" cellspacing="0" cellpadding="2" border="0" style="">
+
+    $markup .= '
+      <table id="oBox_table" width="100%" cellspacing="0" cellpadding="2" border="0" style="">
         <tbody>
           <tr class="legenda">
-            <td width="24%" colspan="2">Previsione</td>
-            <td width="18%" class="tMin">Temp</td>
-            <td width="21%" colspan="2">Vento</td>
-            <td width="14%">Pioggia</td>
-          </tr>';
+            <td width="25%" colspan="2">Previsione</td>';
+
+    if($single_temp_value) {
+      $markup .= '<td width="18%" class="tMin">Temp</td>';
+    } else{
+      $markup .= '<td width="9%" class="tMin">T&nbsp;min</td><td width="9%" class="tMax">T&nbsp;max</td>';
     }
-    else {
-      $markup .= ' 
-    <table id="oBox_table" width="100%" cellspacing="0" cellpadding="2" border="0" style="">
-        <tbody>
-          <tr class="legenda">
-            <td width="24%" colspan="2">Previsione</td>
-            <td width="9%" class="tMin">T&nbsp;min</td>
-            <td width="9%" class="tMax">T&nbsp;max</td>
-            <td width="21%" colspan="2">Vento</td>
-            <td width="14%">Pioggia</td>
-          </tr>';
+
+    if($single_wind_value){
+      $markup .= '<td width="18%" class="tMin">Vento</td>';
+    } else{
+      $markup .= '<td width="9%" class="tMin">V&nbsp;min</td><td width="9%" class="tMax">V&nbsp;max</td>';
     }
+
+    $markup .= '<td width="14%">Pioggia</td>
+                </tr>';
+
 
     //creazione parte dinamica della tabella
     foreach($data as $string => $value){
+
+      //parte statica
+      $markup .= '
+      				<tr>
+      				<td class="data">' . $string . '</td>
+      				<td class="data"><img src="' . $path_publich . $value['icon'] . '" width="16&" height="16&" alt="' . $value['meteo_text'] . '" title="' . $value['meteo_text'] . '"></td>';
+
+      //parte dinamica
       if($single_temp_value){
-        $markup .= '
-				<tr>
-					<td class="data">' . $string . '</td><td class="data"><img src="' . $path_publich . $value['icon'] . '" width="16&" height="16&" alt="' . $value['meteo_text'] . '" title="' . $value['meteo_text'] . '"></td>  <td class="data tmin">' . $value['temp'] . '°C</td><td class="data">' . $value['vento_type'] . '</td>  <td class="data">' . $value['vento'] . ' knt</td><td class="data">' . $value['pioggia'] . ' mm</td> 
-				</tr>';
+        $markup .= '<td class="data tmin">' . $value['temp'] . '°C</td>';
       } else{
-        $markup .= '
-        <tr>
-          <td class="data">' . $string . '</td><td class="data"><img src="' . $path_publich . $value['icon'] . '" width="16&" height="16&" alt="' . $value['meteo_text'] . '" title="' . $value['meteo_text'] . '"></td>  <td class="data tmin">' . $value['temp_min'] . '°C</td>  <td class="data tmax">' . $value['temp_max'] . '°C</td>  <td class="data">' . $value['vento_type'] . '</td>  <td class="data">' . $value['vento'] . ' knt</td><td class="data">' . $value['pioggia'] . ' mm</td> 
-        </tr>
-        ';
+        $markup .= '<td class="data tmin">' . $value['temp_min'] . '°C</td>
+                    <td class="data tmax">' . $value['temp_max'] . '°C</td> ';
       }
+
+      /*
+      <td class="data">' . $value['vento_type'] . '</td>
+      */
+
+      if($single_wind_value){
+        $markup .= '<td class="data tmin">' . $value['vento_type'] . '°</td>';
+      } else{
+        $markup .= '<td class="data tmin">' . $value['vento_min'] . 'knt</td>
+                    <td class="data tmax">' . $value['vento_max'] . 'knt</td>';
+      }
+
+      //parte statica
+      $markup .= '<td class="data">' . $value['pioggia'] . ' mm</td> ';
+
     }
     //chiusura della tabella
     $markup .= '
