@@ -27,7 +27,7 @@ class bollettinoBlock extends BlockBase {
 
     //get colum list
     $colums_lists = \Drupal::config('bollettino.settings')->get('active_colums');
-    dpm($colums_lists);
+    //dpm($colums_lists);
 
     //@todo ottenere il place id e settarlo come default
 
