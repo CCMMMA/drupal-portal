@@ -39,6 +39,11 @@ class bollettinoBlock extends BlockBase {
     //get fields to display
     $fields = \Drupal::config('bollettino.settings')->get('fields');
 
+    //get fields position
+    $fields_position = \Drupal::config('bollettino.settings')->get('fields_position');
+    $fields_position = explode("\n", $fields_position);
+
+
     //get step
     $step = \Drupal::config('bollettino.settings')->get('step');
 
@@ -125,12 +130,20 @@ class bollettinoBlock extends BlockBase {
             <td>Previsione</td>';
 
 
+    foreach($fields_position as $field_name){
+      $field_name = preg_replace('/\s+/', '', $field_name);
+      if(isset(${$field_name .'_setted'}) && ${$field_name .'_setted'}){
+        $markup .= '<td>'.$all_fields->{$field_name}->title->it.'</td>';
+      }
+    }
+
+/*
     foreach($all_fields as $field_name => $value){
       if(isset(${$field_name .'_setted'}) && ${$field_name .'_setted'}){
         $markup .= '<td>'.$value->title->it.'</td>';
       }
     }
-
+*/
     $markup .= '</tr>';
 
 
@@ -142,6 +155,27 @@ class bollettinoBlock extends BlockBase {
 
         //stampo tutti i dati
         $result_array = get_object_vars($list_of_result[$time]);
+
+
+        foreach($fields_position as $field_name){
+          $field_name = preg_replace('/\s+/', '', $field_name);
+          if(isset(${$field_name.'_setted'}) && ${$field_name.'_setted'}) {
+            //gestione icona
+            if($field_name == 'icon'){
+              $pos = strpos($result_array[$field_name], '_night');
+              if ($pos) {
+                $value = str_replace('_night', '', $result_array[$field_name]);
+              }
+              $markup .= '<td class="data"><img src="' . $path_publich . $result_array[$field_name] . '" width="16&" height="16&" alt="' . $result_array[$field_name] . '" title="' . $result_array[$field_name] . '"></td>';
+
+            } else {
+              $markup .= '<td class="data">' . $result_array[$field_name] . ' ' . $all_fields->{$field_name}->unit . '</td>';
+            }
+          }
+        }
+
+/*
+
         foreach($result_array as $field_name => $value){
           if(isset(${$field_name.'_setted'}) && ${$field_name.'_setted'}) {
             //gestione icona
@@ -157,6 +191,7 @@ class bollettinoBlock extends BlockBase {
             }
           }
         }
+*/
       }
       $markup .= '</tr>';
     }

@@ -41,6 +41,10 @@ class bollettinoSettingsForm extends ConfigFormBase {
     $config = $this->config('bollettino.settings');
     $nid = $config->get('place');
 
+    //field_position default value
+    $fields_position_default_value = $config->get('fields_position') ? $config->get('fields_position') :  '';
+
+
     // manage ajax callback
     $triggeringElement = $form_state->getTriggeringElement();
     if(!is_null($triggeringElement) && $triggeringElement['#type'] == 'select' && $triggeringElement['#name'] == 'product'){
@@ -115,6 +119,13 @@ class bollettinoSettingsForm extends ConfigFormBase {
       '#suffix' => '</span>',
       '#required' => TRUE,
     );
+    $form['fields_position'] = array(
+      '#type' => 'textarea',
+      '#title' => $this->t('Position of fields'),
+      '#default_value' => $fields_position_default_value,
+      '#description' => $this->t('Write machine name fields separated by comma'),
+      '#required' => TRUE,
+    );
 
 
     return parent::buildForm($form, $form_state);
@@ -149,6 +160,8 @@ class bollettinoSettingsForm extends ConfigFormBase {
     $config->set('fields', $form_state->getValue('fields'))->save();
     $config->set('product', $form_state->getValue('product'))->save();
     $config->set('step', $form_state->getValue('step'))->save();
+    $config->set('fields_position', $form_state->getValue('fields_position'))->save();
+
 
 
     parent::submitForm($form, $form_state);
