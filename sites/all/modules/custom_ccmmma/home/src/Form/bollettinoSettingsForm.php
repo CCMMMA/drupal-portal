@@ -123,7 +123,7 @@ class bollettinoSettingsForm extends ConfigFormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Position of fields'),
       '#default_value' => $fields_position_default_value,
-      '#description' => $this->t('Write machine name fields separated by comma'),
+      '#description' => $this->t('Insert each fields in a new line'),
       '#required' => TRUE,
     );
 
