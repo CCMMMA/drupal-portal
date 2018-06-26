@@ -21,22 +21,35 @@ class bollettinoBlock extends BlockBase {
    */
   public function build() {
 
+    //servizio per ottenere products and fields
+    $bollettino_service = \Drupal::service('home.BollettinoServices');
+
     //get place
     $place_nid = \Drupal::config('bollettino.settings')->get('place');
     $node_place = entity_load('node', $place_nid);
+    if(isset($node_place) && !empty($node_place)){
+      $id_place = $node_place->get('field_id_place')->getValue()[0]['value'];
+    } else{
+      $id_place = 'com63049';
+    }
 
-    //get colum list
-    $colums_lists = \Drupal::config('bollettino.settings')->get('active_colums');
-    //dpm($colums_lists);
+    //get prod
+    $prod = \Drupal::config('bollettino.settings')->get('product');
 
-    //@todo ottenere il place id e settarlo come default
+    //get fields to display
+    $fields = \Drupal::config('bollettino.settings')->get('fields');
 
+    //get step
+    $step = \Drupal::config('bollettino.settings')->get('step');
 
-
+    //manage cache
     \Drupal::service('page_cache_kill_switch')->trigger();
-    //$build['#cache']['max-age'] = 0;
+
+    // get host of api
     $api = \Drupal::config('api.settings')->get('api');
-    $url_napoli = $api . '/products/wrf5/timeseries/com63049?step=24&date=' . date('Ymd\Z\0\0', time());
+
+    // create url api
+    $url_timeseries = $api . '/products/'.$prod.'/timeseries/'.$id_place.'?step='.$step.'&date=' . date('Ymd\Z\0\0', time());
 
 
     //creo un array con 6 date a partire da oggi
@@ -52,21 +65,20 @@ class bollettinoBlock extends BlockBase {
       'Sabato',
     ];
 
-    $list_of_day[date('Ymd\Z\0\000', time())] = $days[date('w', time())] . ' ' . date('d', time());//oggi
+    $list_of_day[date('Ymd\Z\0\000', time())] = $days[date('w', time())] . ' ' . date('d', time()); //oggi
     $i = 1;
     for ($i; $i <= 7; $i++) {
-      //$list_of_day[gmdate('Ymd\Zhi', time()+(86400*$i))] = gmdate('w', time()+(86400*$i));
+      // calcolo i successivi n giorni
       $list_of_day[date('Ymd\Z\0\000', time() + (86400 * $i))] = $days[date('w', time() + (86400 * $i))] . ' ' . date('d', time() + (86400 * $i)); //oggi
     }
-    //dpm($list_of_day);
-    //get result of api
+
+    //effettuo la chiamata http alle api
     $client = new \GuzzleHttp\Client();
     try {
-      $request = $client->get($url_napoli, ['http_errors' => FALSE]);
-      //WRF($url_napoli);
-      //dpm($list_of_day);
+      $request = $client->get($url_timeseries, ['http_errors' => FALSE]);
       $response = json_decode($request->getBody());
       if (isset($response->timeseries)) {
+        // gestisco i dati ottenuti
         foreach ($response->timeseries as $single_value) {
           if (array_key_exists($single_value->dateTime, $list_of_day)) {
             $list_of_result[$single_value->dateTime] = $single_value;
@@ -78,29 +90,33 @@ class bollettinoBlock extends BlockBase {
     }
 
 
-    //dpm($list_of_result);
+    // ottengo il base_path per visualizzare le immagini
     global $base_url;
     $path_publich = $base_url . '/sites/all/themes/zircon_custom/js/images/';
 
-    $markup = '';
 
+    $markup = '';
     $data = [];
 
-    //dpm($list_of_result);
-    //dpm($list_of_day);
-
+    // intestazione tabella
     $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div><div id="oBox_loading" style="display: none;">    <img src="/sites/default/files/animated_progress_bar.gif" width="400"></div>';
 
 
-    $icon_setted = (in_array('icon', $colums_lists) && $colums_lists['icon'] === 'icon') ? true : false;
-    $wd10_setted = (in_array('wd10', $colums_lists) && $colums_lists['wd10'] === 'wd10') ? true : false;
-    $ws10_max_setted = (in_array('ws10-max', $colums_lists) && $colums_lists['ws10-max'] === 'ws10-max') ? true : false;
-    $ws10_min_setted = (in_array('ws10-min', $colums_lists) && $colums_lists['ws10-min'] === 'ws10-min') ? true : false;
-    $ws10_setted = (in_array('ws10', $colums_lists) && $colums_lists['ws10'] === 'ws10') ? true : false;
-    $crh_setted = (in_array('crh', $colums_lists) && $colums_lists['crh'] === 'crh') ? true : false;
-    $t2c_min_setted = (in_array('t2c-min', $colums_lists) && $colums_lists['t2c-min'] === 't2c-min') ? true : false;
-    $t2c_max_setted = (in_array('t2c-max', $colums_lists) && $colums_lists['t2c-max'] === 't2c-max') ? true : false;
-    $t2c_setted = (in_array('t2c', $colums_lists) && $colums_lists['t2c'] === 't2c') ? true : false;
+    // gestisco i campi da visualizzare
+    foreach($fields as $field => $display){
+      $field_name = str_replace("-","_",$field);
+      if($field == $display && $display !== 0){
+        ${$field_name.'_setted'} = TRUE;
+      } else{
+        ${$field_name.'_setted'} = FALSE;
+      }
+    }
+
+    $bollettino_service->SetAllFields($prod);
+    $all_fields = $bollettino_service->GetAllFields();
+    //dpm($all_fields);
+    //dpm($fields);
+
 
 
     foreach ($list_of_day as $time => $string) {
@@ -108,7 +124,7 @@ class bollettinoBlock extends BlockBase {
       if (isset($list_of_result[$time])) {
         $result_array = get_object_vars($list_of_result[$time]);
         //dpm($result_array);
-        if (isset($result_array['icon']) && $icon_setted) {
+        if (isset($result_array['icon']) && isset($icon_setted) && $icon_setted) {
           $data[$string]['icon'] = $result_array['icon'];
           $pos = strpos($data[$string]['icon'], '_night');
           if ($pos) {
@@ -119,76 +135,76 @@ class bollettinoBlock extends BlockBase {
           $data[$string]['icon'] = '';
         }
         if (isset($result_array['text'])) {
-          $data[$string]['meteo_text'] = $result_array['text'];
+          $data[$string]['text'] = $result_array['text'];
         }
         else {
-          $data[$string]['meteo_text'] = '';
+          $data[$string]['text'] = '';
         }
-        if (isset($result_array['wd10']) && $wd10_setted) {
-          $data[$string]['vento_type'] = round($result_array['wd10'], 0);
-        }
-        else {
-          $data[$string]['vento_type'] = '';
-        }
-        if (isset($result_array['ws10-max']) && $ws10_max_setted) {
-          $data[$string]['vento_max'] = $result_array['ws10-max'];
+        if (isset($result_array['wd10']) && isset($wd10_setted) && $wd10_setted) {
+          $data[$string]['wd10'] = round($result_array['wd10'], 0);
         }
         else {
-          $data[$string]['vento_max'] = '';
+          $data[$string]['wd10'] = '';
         }
-        if (isset($result_array['ws10-min']) && $ws10_min_setted) {
-          $data[$string]['vento_min'] = $result_array['ws10-min'];
+        if (isset($result_array['ws10-max']) && isset($ws10_max_setted) && $ws10_max_setted) {
+          $data[$string]['ws10-max'] = $result_array['ws10-max'];
         }
         else {
-          $data[$string]['vento_min'] = '';
+          $data[$string]['ws10-max'] = '';
         }
-        if ($data[$string]['vento_min'] == '' && $data[$string]['vento_max'] == '') {
-          if (isset($result_array['ws10']) && $ws10_setted) {
-            $data[$string]['vento'] = $result_array['ws10'];
+        if (isset($result_array['ws10-min']) && isset($ws10_min_setted) && $ws10_min_setted) {
+          $data[$string]['ws10-min'] = $result_array['ws10-min'];
+        }
+        else {
+          $data[$string]['ws10-min'] = '';
+        }
+        if ($data[$string]['ws10-min'] == '' && $data[$string]['ws10-max'] == '') {
+          if (isset($result_array['ws10']) && isset($ws10_setted) && $ws10_setted) {
+            $data[$string]['ws10'] = $result_array['ws10'];
           }
           else {
-            $data[$string]['vento'] = '';
+            $data[$string]['ws10'] = '';
           }
         }
         else {
-          $data[$string]['vento'] = round((($data[$string]['vento_max'] + $data[$string]['vento_min']) / 2) * 1.9, 0); //conversione in nodi
+          $data[$string]['ws10'] = round((($data[$string]['ws10-max'] + $data[$string]['ws10-min']) / 2) * 1.9, 0); //conversione in nodi
         }
 
-        if (isset($result_array['crh']) && $crh_setted) {
-          $data[$string]['pioggia'] = round($result_array['crh'], 1);
+        if (isset($result_array['crh']) && isset($crh_setted) && $crh_setted) {
+          $data[$string]['crh'] = round($result_array['crh'], 1);
         }
         else {
-          $data[$string]['pioggia'] = '';
+          $data[$string]['crh'] = '';
         }
-        if (isset($result_array['t2c-min']) && $t2c_min_setted) {
-          $data[$string]['temp_min'] = round($result_array['t2c-min'], 0);
-        }
-        else {
-          $data[$string]['temp_min'] = '';
-        }
-        if (isset($result_array['t2c-max']) && $t2c_max_setted) {
-          $data[$string]['temp_max'] = round($result_array['t2c-max'], 0);
+        if (isset($result_array['t2c-min']) && isset($t2c_min_setted) && $t2c_min_setted) {
+          $data[$string]['t2c-min'] = round($result_array['t2c-min'], 0);
         }
         else {
-          $data[$string]['temp_max'] = '';
+          $data[$string]['t2c-min'] = '';
         }
-        if (isset($result_array['t2c']) && $t2c_setted) {
-          $data[$string]['temp'] = round($result_array['t2c'], 0);
+        if (isset($result_array['t2c-max']) && isset($t2c_max_setted) && $t2c_max_setted) {
+          $data[$string]['t2c-max'] = round($result_array['t2c-max'], 0);
         }
         else {
-          $data[$string]['temp'] = '';
+          $data[$string]['t2c-max'] = '';
+        }
+        if (isset($result_array['t2c']) && isset($t2c_setted) && $t2c_setted) {
+          $data[$string]['t2c'] = round($result_array['t2c'], 0);
+        }
+        else {
+          $data[$string]['t2c'] = '';
         }
 
 
         //caso in cui ho solo una temperatura
-        if ($data[$string]['temp_min'] == '' || $data[$string]['temp_max'] == '') {
+        if ($data[$string]['t2c-min'] == '' || $data[$string]['t2c-max'] == '') {
           $single_temp_value = 1;
         }
         else {
           $single_temp_value = 0;
         }
         //caso in cui ho solo una temperatura
-        if ($data[$string]['vento_min'] == '' || $data[$string]['vento_max'] == '') {
+        if ($data[$string]['ws10-min'] == '' || $data[$string]['ws10-min'] == '') {
           $single_wind_value = 1;
         }
         else {
@@ -242,20 +258,20 @@ class bollettinoBlock extends BlockBase {
       $markup .= '<tr><td class="data">' . $string . '</td>';
 
       if($icon_setted){
-        $markup .= '<td class="data"><img src="' . $path_publich . $value['icon'] . '" width="16&" height="16&" alt="' . $value['meteo_text'] . '" title="' . $value['meteo_text'] . '"></td>';
+        $markup .= '<td class="data"><img src="' . $path_publich . $value['icon'] . '" width="16&" height="16&" alt="' . $value['text'] . '" title="' . $value['text'] . '"></td>';
       }
 
       //parte dinamica
       if($single_temp_value){
         if($t2c_setted) {
-          $markup .= '<td class="data tmin">' . $value['temp'] . '°C</td>';
+          $markup .= '<td class="data tmin">' . $value['t2c'] . '°C</td>';
         }
       } else{
         if($t2c_min_setted) {
-          $markup .= '<td class="data tmin">' . $value['temp_min'] . '°C</td> ';
+          $markup .= '<td class="data tmin">' . $value['t2c-min'] . '°C</td> ';
         }
         if($t2c_max_setted){
-          $markup .= '<td class="data tmax">' . $value['temp_max'] . '°C</td> ';
+          $markup .= '<td class="data tmax">' . $value['t2c-max'] . '°C</td> ';
         }
       }
 
@@ -265,20 +281,20 @@ class bollettinoBlock extends BlockBase {
 
       if($single_wind_value){
         if($ws10_setted) {
-          $markup .= '<td class="data tmin">' . $value['vento_type'] . '°</td>';
+          $markup .= '<td class="data tmin">' . $value['wd10'] . '°</td>';
         }
       } else{
         if($ws10_min_setted) {
-          $markup .= '<td class="data tmin">' . $value['vento_min'] . 'knt</td>';
+          $markup .= '<td class="data tmin">' . $value['ws10-min'] . 'knt</td>';
         }
         if($ws10_max_setted) {
-          $markup .= '<td class="data tmax">' . $value['vento_max'] . 'knt</td>';
+          $markup .= '<td class="data tmax">' . $value['ws10-max'] . 'knt</td>';
         }
       }
 
       //parte statica
       if($crh_setted) {
-        $markup .= '<td class="data">' . $value['pioggia'] . ' mm</td> ';
+        $markup .= '<td class="data">' . $value['crh'] . ' mm</td> ';
       }
 
     }
@@ -293,7 +309,6 @@ class bollettinoBlock extends BlockBase {
       '#cache' => [
         'max-age' => 0,
       ],
-      //TODO add cache manage
     ];
   }
 
