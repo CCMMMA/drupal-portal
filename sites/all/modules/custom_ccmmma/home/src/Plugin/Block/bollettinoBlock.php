@@ -89,6 +89,8 @@ class bollettinoBlock extends BlockBase {
       $list_of_result = [];
     }
 
+    //dpm($list_of_result);
+
 
     // ottengo il base_path per visualizzare le immagini
     global $base_url;
@@ -114,11 +116,65 @@ class bollettinoBlock extends BlockBase {
 
     $bollettino_service->SetAllFields($prod);
     $all_fields = $bollettino_service->GetAllFields();
-    //dpm($all_fields);
-    //dpm($fields);
+
+    //creazione header della tabella
+    $markup .= '
+      <table id="oBox_table" width="100%" cellspacing="0" cellpadding="2" border="0" style="">
+        <tbody>
+          <tr class="legenda">
+            <td>Previsione</td>';
 
 
+    foreach($all_fields as $field_name => $value){
+      if(isset(${$field_name .'_setted'}) && ${$field_name .'_setted'}){
+        $markup .= '<td>'.$value->title->it.'</td>';
+      }
+    }
 
+    $markup .= '</tr>';
+
+
+    foreach ($list_of_day as $time => $string_date) {
+      if (isset($list_of_result[$time])) {
+        $markup .= '<tr>';
+        //stampo la data in versione stringa.
+        $markup .= '<td class="data">' . $string_date . '</td>';
+
+        //stampo tutti i dati
+        $result_array = get_object_vars($list_of_result[$time]);
+        foreach($result_array as $field_name => $value){
+          if(isset(${$field_name.'_setted'}) && ${$field_name.'_setted'}) {
+            //gestione icona
+            if($field_name == 'icon'){
+              $pos = strpos($value, '_night');
+              if ($pos) {
+                $value = str_replace('_night', '', $value);
+              }
+              $markup .= '<td class="data"><img src="' . $path_publich . $value . '" width="16&" height="16&" alt="' . $value . '" title="' . $value . '"></td>';
+
+            } else {
+              $markup .= '<td class="data">' . $value . ' ' . $all_fields->{$field_name}->unit . '</td>';
+            }
+          }
+        }
+      }
+      $markup .= '</tr>';
+    }
+    $markup .= '
+        </tbody>
+    </table>
+    <div class="meteo.ink">  <a href="http://meteo.uniparthenope.it" target="_blank" title="Meteo">    CCMMMA: http://meteo.uniparthenope.it  </a>  <br>  ©2013  <a href="http://meteo.uniparthenope.it/" title="Meteo siti web" target="_blank">    <b>meteo.uniparthenope.it</b> - <b>CCMMMA</b> Università Parthenope  </a>  </div></div>';
+
+
+      /**
+     *
+     *
+     * ###########################
+     *
+     *
+     */
+
+/*
     foreach ($list_of_day as $time => $string) {
       //dpm($time);
       if (isset($list_of_result[$time])) {
@@ -139,6 +195,12 @@ class bollettinoBlock extends BlockBase {
         }
         else {
           $data[$string]['text'] = '';
+        }
+        if (isset($result_array['winds'])) {
+          $data[$string]['winds'] = $result_array['winds'];
+        }
+        else {
+          $data[$string]['winds'] = '';
         }
         if (isset($result_array['wd10']) && isset($wd10_setted) && $wd10_setted) {
           $data[$string]['wd10'] = round($result_array['wd10'], 0);
@@ -219,6 +281,10 @@ class bollettinoBlock extends BlockBase {
           <tr class="legenda">
             <td width="25%" colspan="2">Previsione</td>';
 
+    if($winds_setted){
+      $markup .= '<td width="18%">Vento</td>';
+    }
+
     if($single_temp_value) {
       if($t2c_setted) {
         $markup .= '<td width="18%" class="tMin">Temp</td>';
@@ -250,7 +316,6 @@ class bollettinoBlock extends BlockBase {
     }
     $markup .= '</tr>';
 
-
     //creazione parte dinamica della tabella
     foreach($data as $string => $value){
 
@@ -259,6 +324,10 @@ class bollettinoBlock extends BlockBase {
 
       if($icon_setted){
         $markup .= '<td class="data"><img src="' . $path_publich . $value['icon'] . '" width="16&" height="16&" alt="' . $value['text'] . '" title="' . $value['text'] . '"></td>';
+      }
+
+      if($winds_setted){
+        $markup .= '<td class="data">' . $value['winds'] .'</td>';
       }
 
       //parte dinamica
@@ -274,11 +343,11 @@ class bollettinoBlock extends BlockBase {
           $markup .= '<td class="data tmax">' . $value['t2c-max'] . '°C</td> ';
         }
       }
-
+*/
       /*
       <td class="data">' . $value['vento_type'] . '</td>
       */
-
+/*
       if($single_wind_value){
         if($ws10_setted) {
           $markup .= '<td class="data tmin">' . $value['wd10'] . '°</td>';
@@ -303,7 +372,7 @@ class bollettinoBlock extends BlockBase {
         </tbody>
     </table>
     <div class="meteo.ink">  <a href="http://meteo.uniparthenope.it" target="_blank" title="Meteo">    CCMMMA: http://meteo.uniparthenope.it  </a>  <br>  ©2013  <a href="http://meteo.uniparthenope.it/" title="Meteo siti web" target="_blank">    <b>meteo.uniparthenope.it</b> - <b>CCMMMA</b> Università Parthenope  </a>  </div></div>';
-
+*/
     return [
       '#markup' => \Drupal\Core\Render\Markup::create($markup),
       '#cache' => [
