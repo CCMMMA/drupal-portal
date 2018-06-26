@@ -150,8 +150,9 @@ class bollettinoBlock extends BlockBase {
     foreach ($list_of_day as $time => $string_date) {
       if (isset($list_of_result[$time])) {
         $markup .= '<tr>';
-        //stampo la data in versione stringa.
-        $markup .= '<td class="data">' . $string_date . '</td>';
+        //stampo la data in versione stringa e link.
+        $url_forecast = $base_url.'/forecast/forecast?'.$list_of_result[$time]->link;
+        $markup .= '<td class="data"><a target="_blank" href="'.$url_forecast.'">' . $string_date . '</a></td>';
 
         //stampo tutti i dati
         $result_array = get_object_vars($list_of_result[$time]);
@@ -160,6 +161,7 @@ class bollettinoBlock extends BlockBase {
         foreach($fields_position as $field_name){
           $field_name = preg_replace('/\s+/', '', $field_name);
           if(isset(${$field_name.'_setted'}) && ${$field_name.'_setted'}) {
+
             //gestione icona
             if($field_name == 'icon'){
               $pos = strpos($result_array[$field_name], '_night');
@@ -169,7 +171,9 @@ class bollettinoBlock extends BlockBase {
               $markup .= '<td class="data"><img src="' . $path_publich . $result_array[$field_name] . '" width="16&" height="16&" alt="' . $result_array[$field_name] . '" title="' . $result_array[$field_name] . '"></td>';
 
             } else {
-              $markup .= '<td class="data">' . $result_array[$field_name] . ' ' . $all_fields->{$field_name}->unit . '</td>';
+              // caso generale
+              $unit = isset($all_fields->{$field_name}->unit) ? $all_fields->{$field_name}->unit : '' ;
+              $markup .= '<td class="data">' . $result_array[$field_name] . ' ' . $unit . '</td>';
             }
           }
         }
