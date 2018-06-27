@@ -44,8 +44,9 @@ class forecastTableForm extends FormBase {
       $this->id_place = $_GET['place'];
       $place_node_default = $this->get_place_node_by_id($this->id_place);
     } else{
-      $this->id_place = \Drupal::config('forecast-table.settings')->get('place');
-      $place_node_default = entity_load('node', $this->id_place);
+      $nid = \Drupal::config('forecast-table.settings')->get('place');
+      $place_node_default = entity_load('node', $nid);
+      $this->id_place = $place_node_default->get('field_id_place')->getValue()[0]['value'];
     }
 
     $this->place_name = $place_node_default->get('field_long_name')->getValue()[0]['value'];
