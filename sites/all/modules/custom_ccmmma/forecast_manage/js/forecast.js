@@ -27,7 +27,7 @@ var api_url_base = "http://193.205.230.6";
         setTimeout(function(){
           values = get_form_values();
           console.log(values);
-          url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output'];
+          url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output']+"&date="+ values['data'];
           console.log(url_call);
 
           $.ajax({
@@ -100,8 +100,19 @@ var api_url_base = "http://193.205.230.6";
               replace_image(event.target.name);
             });
           });
+          /*
+          $("edit-date").datepicker({
+            onSelect: function(dateText) {
+              alert("Selected date: " + dateText + "; input's current value: " + this.value);
+            }
+          }).on("change", function() {
+            alert('ciccio');
+          });
+          */
         }
+
       }
+
 
     }
 )(jQuery, Drupal, drupalSettings);

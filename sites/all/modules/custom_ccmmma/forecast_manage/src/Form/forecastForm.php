@@ -162,13 +162,13 @@ class forecastForm extends FormBase {
       '#options' => $utc_list,
       '#default_value' => $hour_now,
     );
-
+/*
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Generate'),
       '#button_type' => 'primary',
     );
-
+*/
 
     $form['#attributes']['class'][] = 'form-forecast';
 
@@ -177,8 +177,10 @@ class forecastForm extends FormBase {
     
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
-        
-    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map?output='.$output;
+
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.'00';
+
+    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map?output='.$output.'&date='.$date_for_api;
 
     $client = \Drupal::httpClient();
 
@@ -191,14 +193,6 @@ class forecastForm extends FormBase {
       $link_map = $response->map->link;
 
     }
-/*
-    foreach($response->data->place->forecast as $value){
-      if(property_exists($value, $date)){
-        $link_map = $value->$date->map;
-        //dpm($link_map);
-      }
-    }
-*/
    
     //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){
