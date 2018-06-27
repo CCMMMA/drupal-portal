@@ -107,19 +107,21 @@ class bollettinoBlock extends BlockBase {
     // intestazione tabella
     $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div>';
 
-
     // gestisco i campi da visualizzare
     foreach($fields as $field => $display){
-      $field_name = str_replace("-","_",$field);
       if($field == $display && $display !== 0){
+        $field_name = str_replace("-","_",$field);
         ${$field_name.'_setted'} = TRUE;
       } else{
+        $field_name = str_replace("-","_",$field);
         ${$field_name.'_setted'} = FALSE;
       }
     }
 
+
     $bollettino_service->SetAllFields($prod);
     $all_fields = $bollettino_service->GetAllFields();
+
 
     //creazione header della tabella
     $markup .= '
@@ -128,10 +130,10 @@ class bollettinoBlock extends BlockBase {
           <tr class="legenda">
             <td>Previsione</td>';
 
-
     foreach($fields_position as $field_name){
       $field_name = preg_replace('/\s+/', '', $field_name);
-      if(isset(${$field_name .'_setted'}) && ${$field_name .'_setted'}){
+      $field_name_underscore = str_replace('-','_', $field_name);
+      if(isset(${$field_name_underscore .'_setted'}) && ${$field_name_underscore .'_setted'}){
         $markup .= '<td>'.$all_fields->{$field_name}->title->it.'</td>';
       }
     }
@@ -159,7 +161,9 @@ class bollettinoBlock extends BlockBase {
 
         foreach($fields_position as $field_name){
           $field_name = preg_replace('/\s+/', '', $field_name);
-          if(isset(${$field_name.'_setted'}) && ${$field_name.'_setted'}) {
+          $field_name_underscore = str_replace('-','_', $field_name);
+
+          if(isset(${$field_name_underscore.'_setted'}) && ${$field_name_underscore.'_setted'}) {
 
             //gestione icona
             if($field_name == 'icon'){
