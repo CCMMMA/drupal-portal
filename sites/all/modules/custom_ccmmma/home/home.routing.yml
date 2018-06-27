@@ -12,7 +12,7 @@ home.bollettino-table-form:
     _form: '\Drupal\home\Form\forecastTableForm'
     _title: 'Forecast Table'
   requirements:
-    _permission: 'TRUE'
+    _access: 'TRUE'
 
 
 bollettino-block.settings:
