@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\forecast_manage\Form;
+
 //namespace Drupal\Core\Ajax;
 
 use Drupal\Core\Render\Element;
@@ -40,25 +41,28 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     //add forecast library
     $form['#attached']['library'][] = 'forecast_manage/forecast-library';
 
     $date_now = date('Y-m-d'); // Y-m-d now
     $date_time_series = date('Ymd');  // Ymd
     $hour_now = date('H'); // H
-    $final_date_now = $date_time_series.'Z'.$hour_now.'00';  // YmdNH
+    //$final_date_now = $date_time_series.'Z'.$hour_now.'00';  // YmdNH
+    $final_date_now = date('Ymd\Z\0\0\0\0', time());
 
-    
+    // get url of api
+    $api = \Drupal::config('api.settings')->get('api');
+
+
     //Default value
-    $prod = 'ww33';
-    $place_id = 'ca000';
+    $prod = 'wrf5';
+    $place_id = 'com63049'; // reg15
     $output = 'gen';
     $date = $final_date_now;
     $utc = $hour_now;
 
-  
-    
-    
+    // get data from args
     if(isset($_GET['product']) && !empty($_GET['product'])){
       $prod = $_GET['product'];
     }
@@ -77,49 +81,31 @@ class forecastForm extends FormBase {
     if(isset($_GET['utc']) && !empty($_GET['utc'])){
       $utc = $_GET['utc'];
     }
-    
+
+    // load node entity of place
     $place_node_default = $this->get_place_node_by_id($place_id);
     
-    //get default output of default product
-    $api = \Drupal::config('api.settings')->get('api');
-    $url_get_products = $api.'/products/'.$prod.'/outputs';
+    //get default outputs of default product
+    $url_get_outputs = $api.'/products/'.$prod.'/outputs';
     $client = \Drupal::httpClient();
-    $request = $client->get($url_get_products);
+    $request = $client->get($url_get_outputs);
     $response = json_decode($request->getBody());
     $output_options = array();
     foreach($response->outputs as $nome => $value){
       $output_options[$nome] = $value->en;
     }
-    //dpm($output_options);
-    //dpm($url_get_products);
-    
-    
+
     //recupero tutti i products disponibili
     $api = \Drupal::config('api.settings')->get('api');
     $url_get_products = $api.'/products';
-    //dpm($url_get_products);
     $client = \Drupal::httpClient();
     $request = $client->get($url_get_products);
     $response = json_decode($request->getBody());
-    //dpm($response->products);
     $product_options = array();
     foreach($response->products as $nome => $value){
       $product_options[$nome] = $value->desc->en;
-      //dpm($nome);
     }
 
-    //dpm($product_options);
-    //dpm($output_options);
-    
-    /*
-    dpm($prod);
-    dpm($place_id);
-    dpm($output);
-    dpm($date);
-    dpm($utc);
-    */
-    
-    //dpm('data richiesta: '.$date);
 
     $date_used = date("Y-m-d", strtotime($date)); //Y-m-d
     $date_form = $date_used;  //da utilizzare nel form
@@ -127,7 +113,7 @@ class forecastForm extends FormBase {
     
     
     /*************************/
-    
+
     $form['place'] = array(
       '#type' => 'entity_autocomplete',
       '#title' => t('PLACE'),
@@ -139,9 +125,7 @@ class forecastForm extends FormBase {
       '#size' => 30,
       '#maxlength' => 60,
     );
-     
-    //todo get default place from url and load node by field_id_place 
-    
+
     $form['product'] = array(
       '#type' => 'select',
       '#title' => t('PRODUCT'),
@@ -160,18 +144,24 @@ class forecastForm extends FormBase {
       '#prefix' => '<span id="edit-load-output">',
       '#suffix' => '</span>',
     );
+    /*
+    if(in_array($output, $output_options)){
+      $form['output']['#default_value'] = $output;
+    }
+    */
+
     $form['date'] = array(
       '#type' => 'date',
       '#title' => t('DATA'),
       '#default_value' => $date_form,
     );
+
     $form['utc'] = array(
       '#type' => 'select',
       '#title' => t('UTC (CET=UTC+2)'),
       '#options' => $utc_list,
       '#default_value' => $hour_now,
     );
-
 
     $form['submit'] = array(
       '#type' => 'submit',
@@ -181,7 +171,8 @@ class forecastForm extends FormBase {
 
 
     $form['#attributes']['class'][] = 'form-forecast';
-    
+
+    //@todo gestire questi link
     $link_change_hour = '<div class="container-link"><p class="change-hour previous"><< (-1h) Previous</p><p class="change-hour next">(+1h) Next >></p></div>';
     
     //get data from url for generate img
@@ -214,7 +205,7 @@ class forecastForm extends FormBase {
       $img_result = '<p>Impossibile caricare immagine</p>';
     }
     else{
-      $img_result = '<img class="img-forecast" src="'.$link_map.'">'; 
+      $img_result = '<img class="img-forecast" src="'.$link_map.'">';
     }
     
     $suffix_markup = $link_change_hour . $img_result;
@@ -271,8 +262,14 @@ class forecastForm extends FormBase {
     foreach($response->outputs as $nome => $value){
       $option_output[$nome] = $value->en;
     }
-    $form['output']['#options'] = $option_output;    
-    
+    $form['output']['#options'] = $option_output;
+
+    if(in_array('gen', $option_output)){
+      $form['output']['#default_value'] = 'gen';
+    } else{
+      unset($form['output']['#default_value']);
+    }
+
     $response_ajax->addCommand(new ReplaceCommand('#edit-load-output', $form['output']));
     return $response_ajax;
   }
@@ -285,7 +282,7 @@ class forecastForm extends FormBase {
     $nids = $query->execute();
     $nid_value = array_values($nids);
     $nid =  array_shift($nid_value);
-    $entity_place = entity_load('node', $nid);
+    $entity_place = Node::load($nid);
     return $entity_place;
   }
 

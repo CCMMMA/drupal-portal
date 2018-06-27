@@ -71,7 +71,7 @@ class forecastTableSettings extends ConfigFormBase {
     $default_step = isset($step) && !empty($step) ? $step : '24';
 
 
-    $node_place = entity_load('node', $nid);
+    $node_place = \Drupal\node\Entity\Node::load($nid);
     $default_place_id = 'com63049';
     $place_node_default = isset($node_place) ? $node_place :  $this->get_place_node_by_id($default_place_id);
 
@@ -173,7 +173,7 @@ class forecastTableSettings extends ConfigFormBase {
     $nids = $query->execute();
     $nid_value = array_values($nids);
     $nid =  array_shift($nid_value);
-    $entity_place = entity_load('node', $nid);
+    $entity_place = \Drupal\node\Entity\Node::load($nid);
     return $entity_place;
   }
 
