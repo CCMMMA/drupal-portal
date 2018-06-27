@@ -1,60 +1,141 @@
 <?php
 
-namespace Drupal\home\Plugin\Block;
+namespace Drupal\home\Form;
 
-use Drupal\Core\Block\BlockBase;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
-/**
- *
- * @Block(
- *   id = "bollettino_meteo_block",
- *   admin_label = @Translation("Bollettino meteo block"),
- * )
- */
-class bollettinoBlock extends BlockBase {
+use Drupal\Core\Ajax\AjaxResponse;
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Drupal\Core\Ajax\ReplaceCommand;
+
+
+
+class bollettinoTableForm extends FormBase {
+
+  private $prod;
+  private $id_place;
+  private $date;
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'bollettino_table_form';
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form = [];
 
-    //servizio per ottenere products and fields
-    $bollettino_service = \Drupal::service('home.BollettinoServices');
-
-    //get place
-    $place_nid = \Drupal::config('bollettino.settings')->get('place');
-    $node_place = entity_load('node', $place_nid);
-    if(isset($node_place) && !empty($node_place)){
-      $id_place = $node_place->get('field_id_place')->getValue()[0]['value'];
+    if(isset($_GET['product']) && !empty($_GET['product'])){
+      $this->prod = $_GET['product'];
     } else{
-      $id_place = 'com63049';
+      $this->prod = 'wrf5';
     }
 
-    //get prod
-    $prod = \Drupal::config('bollettino.settings')->get('product');
+    if(isset($_GET['place']) && !empty($_GET['place'])){
+      $this->id_place = $_GET['place'];
+    } else{
+      $this->id_place = 'ca000';
+    }
+    $place_node_default = $this->get_place_node_by_id($this->id_place);
 
-    //get fields to display
+
+    if(isset($_GET['date']) && !empty($_GET['date'])){
+      $this->date = $_GET['date'];
+    } else{
+      $this->date = date('Ymd\Z\0\0', time());
+    }
+
+
+    //get default output of default product
+    $api = \Drupal::config('api.settings')->get('api');
+
+
+    $form['place'] = array(
+      '#type' => 'entity_autocomplete',
+      '#title' => t('PLACE'),
+      '#target_type' => 'node',
+      '#default_value' => $place_node_default,
+      '#selection_settings' => array(
+        'target_bundles' => array('node', 'place'),
+      ),
+      '#size' => 30,
+      '#maxlength' => 60,
+    );
+
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Generate'),
+      '#button_type' => 'primary',
+    );
+
+    $table_markup = $this->GenerateMarkupTable();
+
+    $form['table_markup'] = array(
+      '#type' => 'markup',
+      '#markup' => $table_markup,
+    );
+
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    //eventuale validate
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $place_nid = $form_state->getValue('place');
+
+    //recupero l'id del place dal nid ottenuto
+    $node = \Drupal\node\Entity\Node::load($place_nid);
+    $id_field = $node->get('field_id_place');
+    $this->place_id = $id_field->value;
+    $date = str_replace('-', "", $this->date);
+
+    $host = \Drupal::request()->getHost();
+
+
+    $form_state->setResponse(new RedirectResponse('/forecast/table?product=wrf5&place='.$this->place_id.'&date='.$date, 302));
+  }
+
+
+  private function get_place_node_by_id($place_id){
+    $query = \Drupal::entityQuery('node')
+      ->condition('status', 1)
+      ->condition('field_id_place', $place_id);
+
+    $nids = $query->execute();
+    $nid_value = array_values($nids);
+    $nid =  array_shift($nid_value);
+    $entity_place = entity_load('node', $nid);
+    return $entity_place;
+  }
+
+  private function GenerateMarkupTable(){
+    $bollettino_service = \Drupal::service('home.BollettinoServices');
+
     $fields = \Drupal::config('bollettino.settings')->get('fields');
 
-    //get fields position
     $fields_position = \Drupal::config('bollettino.settings')->get('fields_position');
     $fields_position = explode("\n", $fields_position);
 
-
-    //get step
-    $step = \Drupal::config('bollettino.settings')->get('step');
-
-    //manage cache
-    \Drupal::service('page_cache_kill_switch')->trigger();
-
-    // get host of api
     $api = \Drupal::config('api.settings')->get('api');
 
-    // create url api
-    $url_timeseries = $api . '/products/'.$prod.'/timeseries/'.$id_place.'?step='.$step.'&date=' . date('Ymd\Z\0\0', time());
-
+    $step = 24;
+    $url_timeseries = $api . '/products/'.$this->prod.'/timeseries/'.$this->id_place.'?step='.$step.'&date=' . date('Ymd\Z\0\0', time());
 
     //creo un array con 6 date a partire da oggi
     $list_of_day = [];
@@ -104,6 +185,7 @@ class bollettinoBlock extends BlockBase {
     $markup = '';
     $data = [];
 
+
     // intestazione tabella
     $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div>';
 
@@ -118,12 +200,12 @@ class bollettinoBlock extends BlockBase {
       }
     }
 
-    $bollettino_service->SetAllFields($prod);
+    $bollettino_service->SetAllFields($this->prod);
     $all_fields = $bollettino_service->GetAllFields();
 
     //creazione header della tabella
     $markup .= '
-      <table id="oBox_table" width="100%" cellspacing="0" cellpadding="2" border="0" style="">
+      <table id="table-forecast" width="100%" cellspacing="0" cellpadding="2" border="0" style="">
         <tbody>
           <tr class="legenda">
             <td>Previsione</td>';
@@ -136,13 +218,6 @@ class bollettinoBlock extends BlockBase {
       }
     }
 
-/*
-    foreach($all_fields as $field_name => $value){
-      if(isset(${$field_name .'_setted'}) && ${$field_name .'_setted'}){
-        $markup .= '<td>'.$value->title->it.'</td>';
-      }
-    }
-*/
     $markup .= '</tr>';
 
 
@@ -186,14 +261,8 @@ class bollettinoBlock extends BlockBase {
     <div class="meteo.ink">  <a href="http://meteo.uniparthenope.it" target="_blank" title="Meteo">    CCMMMA: http://meteo.uniparthenope.it  </a>  <br>  ©2013  <a href="http://meteo.uniparthenope.it/" title="Meteo siti web" target="_blank">    <b>meteo.uniparthenope.it</b> - <b>CCMMMA</b> Università Parthenope  </a>  </div></div>';
 
 
+    return $markup;
 
-    return [
-      '#markup' => \Drupal\Core\Render\Markup::create($markup),
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
   }
 
 }
-

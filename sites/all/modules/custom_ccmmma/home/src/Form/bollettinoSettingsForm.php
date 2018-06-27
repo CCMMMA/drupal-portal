@@ -162,8 +162,6 @@ class bollettinoSettingsForm extends ConfigFormBase {
     $config->set('step', $form_state->getValue('step'))->save();
     $config->set('fields_position', $form_state->getValue('fields_position'))->save();
 
-
-
     parent::submitForm($form, $form_state);
   }
 

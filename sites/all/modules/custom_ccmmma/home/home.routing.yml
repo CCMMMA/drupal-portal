@@ -6,6 +6,14 @@ home.content:
   requirements:
     _permission: 'access content'
 
+home.bollettino-table-form:
+  path: '/forecast/table'
+  defaults:
+    _form: '\Drupal\home\Form\bollettinoTableForm'
+    _title: 'Bollettino Table'
+  requirements:
+    _permission: 'TRUE'
+
 
 bollettino-block.settings:
   path: '/admin/structure/bollettino/settings'
