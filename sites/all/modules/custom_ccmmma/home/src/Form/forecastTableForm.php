@@ -54,7 +54,7 @@ class forecastTableForm extends FormBase {
     if(isset($_GET['step']) && !empty($_GET['step'])){
       $this->step = $_GET['step'];
     } else{
-      $this->step = \Drupal::config('forecast-table.settings')->get('step');;
+      $this->step = \Drupal::config('forecast-table.settings')->get('step');
     }
 
     if(isset($_GET['date']) && !empty($_GET['date'])){
@@ -146,7 +146,7 @@ class forecastTableForm extends FormBase {
 
     $api = \Drupal::config('api.settings')->get('api');
 
-    $step = 24;
+    $step = \Drupal::config('forecast-table.settings')->get('step');
     $url_timeseries = $api . '/products/'.$this->prod.'/timeseries/'.$this->id_place.'?step='.$step.'&date=' . date('Ymd\Z\0\0', time());
 
     //creo un array con 6 date a partire da oggi
@@ -206,8 +206,10 @@ class forecastTableForm extends FormBase {
     foreach($fields as $field => $display){
       $field_name = str_replace("-","_",$field);
       if($field == $display && $display !== 0){
+        $field_name = str_replace("-","_",$field);
         ${$field_name.'_setted'} = TRUE;
       } else{
+        $field_name = str_replace("-","_",$field);
         ${$field_name.'_setted'} = FALSE;
       }
     }
@@ -225,7 +227,9 @@ class forecastTableForm extends FormBase {
 
     foreach($fields_position as $field_name){
       $field_name = preg_replace('/\s+/', '', $field_name);
-      if(isset(${$field_name .'_setted'}) && ${$field_name .'_setted'}){
+      $field_name_underscore = str_replace('-','_', $field_name);
+
+      if(isset(${$field_name_underscore .'_setted'}) && ${$field_name_underscore .'_setted'}){
         $markup .= '<td>'.$all_fields->{$field_name}->title->it.'</td>';
       }
     }
@@ -243,10 +247,11 @@ class forecastTableForm extends FormBase {
         //stampo tutti i dati
         $result_array = get_object_vars($list_of_result[$time]);
 
-
         foreach($fields_position as $field_name){
           $field_name = preg_replace('/\s+/', '', $field_name);
-          if(isset(${$field_name.'_setted'}) && ${$field_name.'_setted'}) {
+          $field_name_underscore = str_replace('-','_', $field_name);
+
+          if(isset(${$field_name_underscore.'_setted'}) && ${$field_name_underscore.'_setted'}) {
 
             //gestione icona
             if($field_name == 'icon'){
