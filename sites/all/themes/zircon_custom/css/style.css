@@ -262,7 +262,7 @@ p.select-language a:hover{
   border: 1px solid black;
 }
 
-.forecast-form.form-forecast .form-item, #bollettino-table-form .form-item-place{
+.forecast-form.form-forecast .form-item, #forecast-table-form .form-item-place{
   display: inline-block;
 }
 

@@ -13,18 +13,19 @@ use Drupal\Core\Ajax\ReplaceCommand;
 
 
 
-class bollettinoTableForm extends FormBase {
+class forecastTableForm extends FormBase {
 
   private $prod;
   private $id_place;
   private $date;
   private $place_name;
+  private $step;
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'bollettino_table_form';
+    return 'forecast_table_form';
   }
 
   /**
@@ -36,18 +37,24 @@ class bollettinoTableForm extends FormBase {
     if(isset($_GET['product']) && !empty($_GET['product'])){
       $this->prod = $_GET['product'];
     } else{
-      $this->prod = 'wrf5';
+      $this->prod = \Drupal::config('forecast-table.settings')->get('product');;
     }
 
     if(isset($_GET['place']) && !empty($_GET['place'])){
       $this->id_place = $_GET['place'];
     } else{
-      $this->id_place = 'ca000';
+      $this->id_place = \Drupal::config('forecast-table.settings')->get('place');
+      ;
     }
     $place_node_default = $this->get_place_node_by_id($this->id_place);
 
     $this->place_name = $place_node_default->get('field_long_name')->getValue()[0]['value'];
 
+    if(isset($_GET['step']) && !empty($_GET['step'])){
+      $this->step = $_GET['step'];
+    } else{
+      $this->step = \Drupal::config('forecast-table.settings')->get('step');;
+    }
 
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $this->date = $_GET['date'];
@@ -131,9 +138,9 @@ class bollettinoTableForm extends FormBase {
   private function GenerateMarkupTable(){
     $bollettino_service = \Drupal::service('home.BollettinoServices');
 
-    $fields = \Drupal::config('bollettino.settings')->get('fields');
+    $fields = \Drupal::config('forecast-table.settings')->get('fields');
 
-    $fields_position = \Drupal::config('bollettino.settings')->get('fields_position');
+    $fields_position = \Drupal::config('forecast-table.settings')->get('fields_position');
     $fields_position = explode("\n", $fields_position);
 
     $api = \Drupal::config('api.settings')->get('api');

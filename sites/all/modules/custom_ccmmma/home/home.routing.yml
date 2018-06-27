@@ -9,7 +9,7 @@ home.content:
 home.bollettino-table-form:
   path: '/forecast/table'
   defaults:
-    _form: '\Drupal\home\Form\bollettinoTableForm'
+    _form: '\Drupal\home\Form\forecastTableForm'
     _title: 'Forecast Table'
   requirements:
     _permission: 'TRUE'
@@ -20,5 +20,13 @@ bollettino-block.settings:
   defaults:
     _form: '\Drupal\home\Form\bollettinoSettingsForm'
     _title: 'Bollettino settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+forecast-table.settings:
+  path: '/admin/structure/bollettino/forecast-table/settings'
+  defaults:
+    _form: '\Drupal\home\Form\forecastTableSettings'
+    _title: 'Forecast Table settings'
   requirements:
     _permission: 'administer site configuration'
