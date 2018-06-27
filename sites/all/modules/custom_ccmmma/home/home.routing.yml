@@ -10,7 +10,7 @@ home.bollettino-table-form:
   path: '/forecast/table'
   defaults:
     _form: '\Drupal\home\Form\bollettinoTableForm'
-    _title: 'Bollettino Table'
+    _title: 'Forecast Table'
   requirements:
     _permission: 'TRUE'
 
