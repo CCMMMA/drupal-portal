@@ -18,6 +18,8 @@ class bollettinoTableForm extends FormBase {
   private $prod;
   private $id_place;
   private $date;
+  private $place_name;
+
   /**
    * {@inheritdoc}
    */
@@ -43,6 +45,8 @@ class bollettinoTableForm extends FormBase {
       $this->id_place = 'ca000';
     }
     $place_node_default = $this->get_place_node_by_id($this->id_place);
+
+    $this->place_name = $place_node_default->get('field_long_name')->getValue()[0]['value'];
 
 
     if(isset($_GET['date']) && !empty($_GET['date'])){
@@ -187,7 +191,7 @@ class bollettinoTableForm extends FormBase {
 
 
     // intestazione tabella
-    $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div>';
+    $markup .= '    <div id="box">  <div class="title">Meteo '.$this->place_name.'   <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div>';
 
 
     // gestisco i campi da visualizzare
