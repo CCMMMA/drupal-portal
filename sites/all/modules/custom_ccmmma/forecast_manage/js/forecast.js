@@ -44,8 +44,14 @@ var api_url_base = "http://193.205.230.6";
               src_image = data.map.link;
               //console.log(src_image);
               $(".img-forecast").replaceWith("<img class='img-forecast' src='" + src_image + "'>");
+              $(".legend-left").attr("src", api_url_base+'/products/'+$prod+'/forecast/legend/left/'+output+'?width=64&height=563');
+              $(".legend-right").attr("src", api_url_base+'/products/'+$prod+'/forecast/legend/right/'+output+'?width=64&height=563');
+              $(".legend-bottom").attr("src", api_url_base+'/products/'+$prod+'/forecast/legend/bottom/'+output+'?width=64&height=73');
             } else{
               $(".img-forecast").replaceWith("<p class='img-forecast'>No image</p>");
+              $(".legend-left").attr("src", '');
+              $(".legend-right").attr("src", '');
+              $(".legend-bottom").attr("src", '');
             }
 
           });

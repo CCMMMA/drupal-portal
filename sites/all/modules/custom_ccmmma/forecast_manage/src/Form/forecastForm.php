@@ -193,16 +193,25 @@ class forecastForm extends FormBase {
       $link_map = $response->map->link;
 
     }
-   
+    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/left/gen?width=64&height=563"></div>';
+    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/right/gen?width=64&height=563"></div>';
+    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/bottom/gen?width=768&height=64"></div>';
+
     //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){
       $img_result = '<p>Impossibile caricare immagine</p>';
     }
     else{
-      $img_result = '<img class="img-forecast" src="'.$link_map.'">';
+      $img_result = '<div class="col-lg-8"><img class="img-forecast" src="'.$link_map.'"></div>';
     }
+
+    $markup_image = '<div class="row">';
+    $markup_image .= $markup_legend_left . $img_result . $markup_legend_right . $markup_legend_bottom;
+    $markup_image .= '</div>';
+   
+
     
-    $suffix_markup = $link_change_hour . $img_result;
+    $suffix_markup = $link_change_hour . $markup_image;
     $form['#suffix'] = $suffix_markup;
     
     return $form;
