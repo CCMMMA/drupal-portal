@@ -247,6 +247,10 @@ p.select-language a:hover{
       margin-left: -20px;
 }
 
+.hidden-submit{
+  display: none;
+}
+
 .style_title{
       text-align: center;
     font-size: 20px;

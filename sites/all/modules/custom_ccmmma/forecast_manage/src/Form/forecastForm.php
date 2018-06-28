@@ -41,6 +41,7 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    //kint($form_state);
 
     //add forecast library
     $form['#attached']['library'][] = 'forecast_manage/forecast-library';
@@ -162,13 +163,15 @@ class forecastForm extends FormBase {
       '#options' => $utc_list,
       '#default_value' => $hour_now,
     );
-/*
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Generate'),
       '#button_type' => 'primary',
+      '#prefix' => '<div class="hidden-submit">',
+      '#suffix' => '</div>',
     );
-*/
+
 
     $form['#attributes']['class'][] = 'form-forecast';
 
@@ -233,11 +236,12 @@ class forecastForm extends FormBase {
     $output = $form_state->getValue('output');
     $date = $form_state->getValue('date');
     $utc = $form_state->getValue('utc');
-    
+
     //recupero l'id del place dal nid ottenuto
     $node = \Drupal\node\Entity\Node::load($place_nid);
     $id_field = $node->get('field_id_place');
     $id_place = $id_field->value;
+
     $date = str_replace('-', "", $date);
     $final_date_now = $date.'Z'.$utc.'00';
 
