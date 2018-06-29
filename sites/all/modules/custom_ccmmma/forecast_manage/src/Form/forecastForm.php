@@ -145,11 +145,11 @@ class forecastForm extends FormBase {
       '#prefix' => '<span id="edit-load-output">',
       '#suffix' => '</span>',
     );
-    /*
+
     if(in_array($output, $output_options)){
       $form['output']['#default_value'] = $output;
     }
-    */
+
 
     $form['date'] = array(
       '#type' => 'date',
@@ -161,7 +161,7 @@ class forecastForm extends FormBase {
       '#type' => 'select',
       '#title' => t('UTC (CET=UTC+2)'),
       '#options' => $utc_list,
-      '#default_value' => $hour_now,
+      '#default_value' => (int)$hour_now,
     );
 
     $form['submit'] = array(

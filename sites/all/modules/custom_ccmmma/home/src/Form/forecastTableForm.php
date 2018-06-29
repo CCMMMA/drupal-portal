@@ -4,6 +4,7 @@ namespace Drupal\home\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 use Drupal\Core\Ajax\AjaxResponse;
 
@@ -51,7 +52,8 @@ class forecastTableForm extends FormBase {
 
     $this->place_name = $place_node_default->get('field_long_name')->getValue()[0]['value'];
 
-    if(isset($_GET['step']) && !empty($_GET['step'])){
+
+    if(isset($_GET['step']) && $_GET['step'] != ''){
       $this->step = $_GET['step'];
     } else{
       $this->step = \Drupal::config('forecast-table.settings')->get('step');
@@ -62,7 +64,6 @@ class forecastTableForm extends FormBase {
     } else{
       $this->date = date('Ymd\Z\0\0', time());
     }
-
 
     //get default output of default product
     $api = \Drupal::config('api.settings')->get('api');
@@ -132,7 +133,7 @@ class forecastTableForm extends FormBase {
     $nids = $query->execute();
     $nid_value = array_values($nids);
     $nid =  array_shift($nid_value);
-    $entity_place = entity_load('node', $nid);
+    $entity_place = \Drupal\node\Entity\Node::load($nid);
     return $entity_place;
   }
 
@@ -146,8 +147,9 @@ class forecastTableForm extends FormBase {
 
     $api = \Drupal::config('api.settings')->get('api');
 
-    $step = \Drupal::config('forecast-table.settings')->get('step');
-    $url_timeseries = $api . '/products/'.$this->prod.'/timeseries/'.$this->id_place.'?step='.$step.'&date=' . date('Ymd\Z\0\0', time());
+
+    $url_timeseries = $api . '/products/'.$this->prod.'/timeseries/'.$this->id_place.'?step='.$this->step.'&date=' . date('Ymd\Z\0\0', time());
+    //dpm($url_timeseries);
 
     //creo un array con 6 date a partire da oggi
     $list_of_day = [];
@@ -177,16 +179,19 @@ class forecastTableForm extends FormBase {
       if (isset($response->timeseries)) {
         // gestisco i dati ottenuti
         foreach ($response->timeseries as $single_value) {
-          if (array_key_exists($single_value->dateTime, $list_of_day)) {
+          //if (array_key_exists($single_value->dateTime, $list_of_day)) {
             $list_of_result[$single_value->dateTime] = $single_value;
-          }
+          //}
         }
       }
     } catch (RequestException $e) {
       $list_of_result = [];
     }
 
+    //dpm($list_of_day);
     //dpm($list_of_result);
+
+
 
 
     // ottengo il base_path per visualizzare le immagini
@@ -236,9 +241,10 @@ class forecastTableForm extends FormBase {
 
     $markup .= '</tr>';
 
-
-    foreach ($list_of_day as $time => $string_date) {
-      if (isset($list_of_result[$time])) {
+    foreach ($list_of_result as $time => $value) {
+      $string_date = $this->GetTimestampFromDate($time);
+    //foreach ($list_of_day as $time => $string_date) {
+      //if (isset($list_of_result[$time])) {
         $markup .= '<tr>';
         //stampo la data in versione stringa e link.
         $url_forecast = $base_url.'/forecast/forecast?'.$list_of_result[$time]->link;
@@ -269,7 +275,7 @@ class forecastTableForm extends FormBase {
           }
         }
 
-      }
+      //}
       $markup .= '</tr>';
     }
     $markup .= '
@@ -280,6 +286,24 @@ class forecastTableForm extends FormBase {
 
     return $markup;
 
+  }
+
+  public function GetTimestampFromDate($string){
+    $days = [
+      'Domenica',
+      'Lunedì',
+      'Martedì',
+      'Mercoledì',
+      'Giovedì',
+      'Venerdì',
+      'Sabato',
+    ];
+    $arr = explode("Z", $string, 2);
+    $date = $arr[0];
+    $dtime = DrupalDateTime::createFromFormat("Ymd", "$date");
+    $timestamp = $dtime->getTimestamp();
+    $data_string = $days[date('w', $timestamp)] . ' ' . date('d', $timestamp);
+    return $data_string;
   }
 
 }
