@@ -238,10 +238,11 @@ class forecastTableForm extends FormBase {
 
     $markup .= '</tr>';
 
-
     foreach ($list_of_result as $time => $value) {
+
       $string_date = $this->GetStringFromDate($time);
-    //foreach ($list_of_day as $time => $string_date) {
+
+      //foreach ($list_of_day as $time => $string_date) {
       //if (isset($list_of_result[$time])) {
         $markup .= '<tr>';
         //stampo la data in versione stringa e link.
@@ -309,7 +310,7 @@ class forecastTableForm extends FormBase {
     $date = $arr[0];
     $dtime = DrupalDateTime::createFromFormat("Ymd", "$date");
     $timestamp = $dtime->getTimestamp();
-    if($this->step == -1 || $this->step == '0' || $this->step = '1'){
+    if($this->step == '-1' || $this->step == '0' || $this->step == '1'){
       $orario = $arr[1];
       $orario = substr_replace($orario, ':', 2, 0);
       $data_string = $days[date('w', $timestamp)] . ' ' . date('d', $timestamp) . ' - ' . $orario;
