@@ -6,11 +6,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 
-use Drupal\Core\Ajax\AjaxResponse;
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Drupal\Core\Ajax\ReplaceCommand;
 
 
 
@@ -267,7 +264,11 @@ class forecastTableForm extends FormBase {
               }
               $markup .= '<td class="data"><img src="' . $path_publich . $result_array[$field_name] . '" width="16&" height="16&" alt="' . $result_array[$field_name] . '" title="' . $result_array[$field_name] . '"></td>';
 
-            } else {
+            } elseif($field_name == 'dateTime'){
+              $markup .= '<td class="data">' . $result_array[$field_name] . '</td>';
+            }
+
+            else {
               // caso generale
               $unit = isset($all_fields->{$field_name}->unit) ? $all_fields->{$field_name}->unit : '' ;
               $markup .= '<td class="data">' . $result_array[$field_name] . ' ' . $unit . '</td>';
