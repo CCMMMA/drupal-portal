@@ -296,6 +296,13 @@ class forecastTableForm extends FormBase {
 
   }
 
+  /**
+   * @param $string
+   *
+   * @return string
+   *
+   * This method return string (format YMDZhm) converted into 'Week Day - h:m'
+   */
   public function GetStringFromDate($string){
     $days = [
       'Domenica',
