@@ -110,7 +110,7 @@ class forecastForm extends FormBase {
 
     $date_used = date("Y-m-d", strtotime($date)); //Y-m-d
     $date_form = $date_used;  //da utilizzare nel form
-    $utc_list = range(0, 24);
+    $utc_list = range(0, 23);
     
     
     /*************************/
@@ -153,13 +153,13 @@ class forecastForm extends FormBase {
 
     $form['date'] = array(
       '#type' => 'date',
-      '#title' => t('DATA'),
+      '#title' => $this->t('DATA'),
       '#default_value' => $date_form,
     );
 
     $form['utc'] = array(
       '#type' => 'select',
-      '#title' => t('UTC (CET=UTC+2)'),
+      '#title' => $this->t('UTC (CET=UTC+2)'),
       '#options' => $utc_list,
       '#default_value' => (int)$hour_now,
     );

@@ -18,7 +18,6 @@ class tableBlock extends BlockBase {
    */
   public function build() {
     $api = \Drupal::config('api.settings')->get('api');
-    $markup = 'ciao';
     /*
     $url_wrf_golfo_napoli = $api.'/products/wrf3/forecast/ca001/map';
     $url_ww3_golfo_napoli = $api.'/products/ww33/forecast/ca001/map';
