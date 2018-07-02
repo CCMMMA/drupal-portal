@@ -117,7 +117,7 @@ class forecastForm extends FormBase {
 
     $form['place'] = array(
       '#type' => 'entity_autocomplete',
-      '#title' => t('DATE'),
+      '#title' => t('PLACE'),
       '#target_type' => 'node',
       '#default_value' => $place_node_default,
       '#selection_settings' => array(
@@ -153,7 +153,7 @@ class forecastForm extends FormBase {
 
     $form['date'] = array(
       '#type' => 'date',
-      '#title' => $this->t('DATA'),
+      '#title' => $this->t('DATE'),
       '#default_value' => $date_form,
     );
 
