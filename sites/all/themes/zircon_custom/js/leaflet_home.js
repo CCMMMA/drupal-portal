@@ -467,6 +467,7 @@ var api_url_base = "http://193.205.230.6";
     option_geojsonTileLayer = {
       clipTiles: true,
     };
+
     // opzioni del json per il layer json
     geojsonOptions_geojsonTileLayer = {
       style: style,
@@ -484,18 +485,22 @@ var api_url_base = "http://193.205.230.6";
         if (feature.properties) {
           //console.log(feature.properties);
           country = feature.properties.country;
-          city = feature.properties.city;
+          city = feature.properties.name;
           id = feature.properties.id;
-          clouds = feature.properties.clouds;
+          clouds = feature.properties.clf; //clouds
           dateTime = feature.properties.dateTime;
-          humidity = feature.properties.humidity;
-          pressure = feature.properties.pressure;
-          temp = feature.properties.temp;
+          humidity = feature.properties.rh2; //umidity
+          pressure = feature.properties.slp; //pressure
+          temp = feature.properties.t2c; //temp
           text = feature.properties.text;
-          wind_direction = feature.properties.wind_deg;
-          wind_speed = feature.properties.wind_speed;
-          //creazione popup place
-          var popupString = "<div class='popup'>" +
+          wind_direction = feature.properties.wd10; // wind_deg
+          wind_speed = feature.properties.ws10n; //wind_speed
+          wind_chill = feature.properties.wchill; //wind_chill
+          winds = feature.properties.winds; //winds
+
+
+
+          popupString = "<div class='popup'>" +
               "<table class='tg' style='undefined;table-layout: fixed; width: 230px'>" +
               "<colgroup>" +
               "<col style='width: 85px'>" +
@@ -507,7 +512,17 @@ var api_url_base = "http://193.205.230.6";
               "<tr>" +
               "<td class='tg-7un6'>COUNTRY</td>" +
               "<td class='tg-7un6'>" + country + "</td>" +
-              "</tr>" +
+              "</tr>";
+
+/*
+          $.each(fields, function (index, field) {
+            console.log(feature.properties[field]);
+            popupString + "<td>+ field.title.it +</td>" + "<td'>" + feature.properties[field] + " " + field.unit + "</td>";
+          })
+*/
+          //creazione popup place
+
+          popupString +=
               "<tr>" +
               "<td class='tg-j0tj'>TEMP</td>" +
               "<td class='tg-j0tj'>" + temp + "°C</td>" +
@@ -526,18 +541,26 @@ var api_url_base = "http://193.205.230.6";
               "</tr>" +
               "<tr>" +
               "<td class='tg-j0tj'>PRESSURE</td>" +
-              "<td class='tg-j0tj'>" + pressure + " kPa</td>" +
+              "<td class='tg-j0tj'>" + pressure + " HPa</td>" +
               "</tr>" +
               "<tr>" +
               "<td class='tg-7un6'>WIND DIRECTION</td>" +
-              "<td class='tg-7un6'>" + wind_direction + "°</td>" +
+              "<td class='tg-7un6'>" + wind_direction + " °N</td>" +
               "</tr>" +
               "<tr>" +
               "<td class='tg-j0tj'>WIND SPEED</td>" +
-              "<td class='tg-j0tj'>" + wind_speed + " m/s</td>" +
+              "<td class='tg-j0tj'>" + wind_speed + " knt</td>" +
+              "</tr>" +
+              "<td class='tg-7un6'>WIND CHILL</td>" +
+              "<td class='tg-7un6'>" + wind_chill + " *C</td>" +
+              "</tr>" +
+              "<td class='tg-j0tj'>WIND</td>" +
+              "<td class='tg-j0tj'>" + winds + "</td>" +
               "</tr>" +
               "</table>" +
               "</div>";
+
+          popupString += "</table>" + "</div>";
 
           layer.bindPopup(popupString);
         }
@@ -588,15 +611,24 @@ var api_url_base = "http://193.205.230.6";
   Drupal.behaviors.behaviors_leaflet = {
     attach: function (context, settings) {
 
-
       insert_button();
       //Viene eseguito di default
       if ($('.mapid').length) {
-        //data e ora corrente
-        data = $('.scelta-singola.selected').attr("data");
-        ora = $('.select-hour input').val();
-        //todo gestire in base alle api
-        get_map('com', data, ora);
+
+        //get all fields for product
+        url_call = api_url_base+'/products/wrf5/fields';
+        $.ajax({
+          url: url_call,
+        }).done(function (data) {
+          fields = data.fields;
+
+          //data e ora corrente
+          data = $('.scelta-singola.selected').attr("data");
+          ora = $('.select-hour input').val();
+          //todo gestire in base alle api
+          get_map('com', data, ora);
+        });
+
 
 
         //Quando effettuo una scelta
