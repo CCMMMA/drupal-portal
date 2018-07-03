@@ -14,10 +14,13 @@ var api_url_base = "http://193.205.230.6";
 
         parameters['product'] = $('select[name=product]').val();
         parameters['output'] = $('select[name=output]').val();
-        data = $('input[name=date]').val();
-        data = data.replace(new RegExp('-', 'g'), '') + 'Z' + $('select[name=utc]').val() + '00';
-        parameters['data'] = data;
         parameters['utc'] = $('select[name=utc]').val();
+        data = $('input[name=date]').val();
+        num = parameters['utc'];
+        utc = (num.toString().length < 2 ? "0"+num : num ).toString();
+        parameters['utc'] = utc;
+        data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + '00';
+        parameters['data'] = data;
 
         return parameters;
       }
