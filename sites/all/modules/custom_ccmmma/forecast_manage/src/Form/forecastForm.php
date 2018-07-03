@@ -235,7 +235,8 @@ class forecastForm extends FormBase {
     $place_nid = $form_state->getValue('place');
     $output = $form_state->getValue('output');
     $date = $form_state->getValue('date');
-    $utc = $form_state->getValue('utc');
+    $utc = sprintf("%02d", $form_state->getValue('utc'));
+
 
     //recupero l'id del place dal nid ottenuto
     $node = \Drupal\node\Entity\Node::load($place_nid);
@@ -245,9 +246,7 @@ class forecastForm extends FormBase {
     $date = str_replace('-', "", $date);
     $final_date_now = $date.'Z'.$utc.'00';
 
-    $host = \Drupal::request()->getHost();
 
-        
     $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now.'&utc='.$utc, 302));
   }
   
