@@ -146,7 +146,7 @@ class forecastForm extends FormBase {
       '#suffix' => '</span>',
     );
 
-    if(in_array($output, $output_options)){
+    if(isset($output_options[$output])){
       $form['output']['#default_value'] = $output;
     }
 
