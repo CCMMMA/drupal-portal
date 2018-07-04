@@ -79,7 +79,7 @@ class forecastForm extends FormBase {
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $date = $_GET['date'];
     }
-    if(isset($_GET['utc']) && !empty($_GET['utc'])){
+    if(isset($_GET['utc'])){
       $utc = $_GET['utc'];
     }
 
@@ -161,7 +161,7 @@ class forecastForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('UTC (CET=UTC+2)'),
       '#options' => $utc_list,
-      '#default_value' => (int)$hour_now,
+      '#default_value' => (int)$utc,
     );
 
     $form['submit'] = array(
