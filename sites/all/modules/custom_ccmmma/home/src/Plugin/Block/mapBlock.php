@@ -131,7 +131,7 @@ class mapBlock extends BlockBase {
     <div class="row" style="margin-top: 16px;">
     <div class="col-md-4 wrf">
     <div style="border: 1px solid black; margin-top:2px; text-align:center;">
-    <div class="wrf-title style_title">WRF</div>
+    <div class="wrf-title style_title">Meteo</div>
     
     <div class="img-box"><a href="/forecast/forecast?product=wrf5&place=ca000"><img id="imgfor" src="'.$url_img_wrf.'" /></a></div>
     </div>
@@ -139,7 +139,7 @@ class mapBlock extends BlockBase {
     
     <div class="col-md-4 ww3">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="ww3-title style_title">WW3</div>
+    <div class="ww3-title style_title">Mare</div>
     
     <div class="img-box"><a href="/forecast/forecast?product=ww33&place=ca000"><img id="imgfor" src="'.$url_img_ww3.'" /></a></div>
     </div>
@@ -147,7 +147,7 @@ class mapBlock extends BlockBase {
     
     <div class="col-md-4 chimere">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="chimere-title style_title">CHIMERE</div>
+    <div class="chimere-title style_title">Aria</div>
     
     <div class="img-box"><a href="/forecast/forecast?product=chm3&place=ca000"><img id="imgfor" src="'.$url_img_chm.'" /></a>
      <!--<img id="bar_right" src="http://blackjeans.uniparthenope.it/prods/getbar.php?model=chm3&amp;position=v&amp;output=caqi" />-->
