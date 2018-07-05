@@ -2,7 +2,7 @@ example.settings:
   path: '/forecast/forecast'
   defaults:
     _form: '\Drupal\forecast_manage\Form\forecastForm'
-    _title: 'Meteo Forecast'
+    _title: 'Weather Forecast'
   requirements:
     _access: 'TRUE'
     
