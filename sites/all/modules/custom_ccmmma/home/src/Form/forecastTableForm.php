@@ -32,6 +32,9 @@ class forecastTableForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
+    $form['#attached']['library'][] = 'home/home-library';
+
+
     if(isset($_GET['product']) && !empty($_GET['product'])){
       $this->prod = $_GET['product'];
     } else{
@@ -76,6 +79,15 @@ class forecastTableForm extends FormBase {
       ),
       '#size' => 30,
       '#maxlength' => 60,
+    );
+
+    $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
+
+    $form['switch'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Change forecast type'),
+      '#options' => $forecast_type,
+      '#default_value' => 'table',
     );
 
     $form['submit'] = array(

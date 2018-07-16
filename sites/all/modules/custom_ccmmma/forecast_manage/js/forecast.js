@@ -14,6 +14,7 @@ var api_url_base = "http://193.205.230.6";
 
         parameters['product'] = $('select[name=product]').val();
         parameters['output'] = $('select[name=output]').val();
+        parameters['switch'] = $('select[name=switch]').val();
         parameters['utc'] = $('select[name=utc]').val();
         data = $('input[name=date]').val();
         num = parameters['utc'];
@@ -29,9 +30,9 @@ var api_url_base = "http://193.205.230.6";
         values = [];
         setTimeout(function(){
           values = get_form_values();
-          console.log(values);
+          //console.log(values);
           url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output']+"&date="+ values['data'];
-          console.log(url_call);
+          //console.log(url_call);
 
           $.ajax({
             url: url_call,
@@ -84,6 +85,16 @@ var api_url_base = "http://193.205.230.6";
 
       }
 
+      function redirect_to_forecast_type(){
+        parameters = get_form_values();
+        forecast_type = parameters['switch'];
+        if(forecast_type != 'forecast'){
+          args = 'product='+parameters['product'] + '&place=' + parameters['place'] + '&output=' + parameters['output'] + '&date=' + parameters['data'] + '&utc=' + parameters['utc'];
+          $(window.location).attr('href', window.location.protocol + "//" + window.location.host + "/" + 'forecast/' + forecast_type + '?' + args);
+        }
+
+      }
+
 
       Drupal.behaviors.behaviors_forecast = {
         attach: function (context, settings) {
@@ -97,9 +108,14 @@ var api_url_base = "http://193.205.230.6";
 
           $('#forecast-form select').once('#forecast-form').each(function () {
             $(this).change(function (event) {
-              $('#ajax-loader-marker').show();
-
-              replace_image(event.target.name);
+              if(event.target.name == 'switch'){
+               //console.log('switch');
+               //console.log(this);
+               redirect_to_forecast_type();
+              } else {
+                $('#ajax-loader-marker').show();
+                replace_image(event.target.name);
+              }
             });
 
 

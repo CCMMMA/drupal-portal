@@ -1,0 +1,7 @@
+
+home-library:
+  varsion: 1.x
+  js:
+    js/home.js: {}
+  dependencies:
+      - core/jquery

@@ -164,6 +164,15 @@ class forecastForm extends FormBase {
       '#default_value' => (int)$utc,
     );
 
+    $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
+
+    $form['switch'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Change forecast type'),
+      '#options' => $forecast_type,
+      '#default_value' => 'forecast',
+    );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Generate'),
