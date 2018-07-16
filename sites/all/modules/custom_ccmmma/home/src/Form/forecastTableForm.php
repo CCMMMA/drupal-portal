@@ -81,6 +81,12 @@ class forecastTableForm extends FormBase {
       '#maxlength' => 60,
     );
 
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Generate'),
+      '#button_type' => 'primary',
+    );
+
     $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
 
     $form['switch'] = array(
@@ -88,12 +94,6 @@ class forecastTableForm extends FormBase {
       '#title' => $this->t('Change forecast type'),
       '#options' => $forecast_type,
       '#default_value' => 'table',
-    );
-
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Generate'),
-      '#button_type' => 'primary',
     );
 
     $table_markup = $this->GenerateMarkupTable();
