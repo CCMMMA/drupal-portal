@@ -33,7 +33,6 @@ var api_url_base = "http://193.205.230.6";
           values = get_form_values();
           //console.log(values);
           url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output']+"&date="+ values['date'];
-          //console.log(url_call);
 
           $.ajax({
             url: url_call,
@@ -91,7 +90,6 @@ var api_url_base = "http://193.205.230.6";
         forecast_type = parameters['switch'];
         if(forecast_type != 'forecast'){
           args = 'product='+parameters['product'] + '&place=' + parameters['place'] + '&output=' + parameters['output'] + '&date=' + parameters['date'];
-          console.log(parameters);
           $(window.location).attr('href', window.location.protocol + "//" + window.location.host + "/" + 'forecast/' + forecast_type + '?' + args);
         }
 

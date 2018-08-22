@@ -41,16 +41,9 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    //kint($form_state);
 
     //add forecast library
     $form['#attached']['library'][] = 'forecast_manage/forecast-library';
-
-    $date_now = date('Y-m-d'); // Y-m-d now
-    $date_time_series = date('Ymd');  // Ymd
-    $hour_now = date('H'); // H
-    //$final_date_now = $date_time_series.'Z'.$hour_now.'00';  // YmdNH
-    $final_date_now = date('Ymd\Z\0\0\0\0', time());
 
     // get url of api
     $api = \Drupal::config('api.settings')->get('api');
@@ -60,8 +53,6 @@ class forecastForm extends FormBase {
     $prod = 'wrf5';
     $place_id = 'com63049'; // reg15
     $output = 'gen';
-    $date = $final_date_now;
-    $utc = $hour_now;
 
     // get data from args
     if(isset($_GET['product']) && !empty($_GET['product'])){
@@ -82,9 +73,11 @@ class forecastForm extends FormBase {
       $utc = date("H",$date_strtotime);
       $current_minutes = date('i', $date_strtotime);
     } else{
+      //default case
       $date_strtotime = time();
       $current_minutes = date('i');
       $utc = date("H");
+      $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
     }
 
     // load node entity of place
@@ -201,7 +194,7 @@ class forecastForm extends FormBase {
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
 
-    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.'00';
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
 
     $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map?output='.$output.'&date='.$date_for_api;
 
@@ -214,7 +207,6 @@ class forecastForm extends FormBase {
 
     if(isset($response->map->link)){
       $link_map = $response->map->link;
-
     }
     $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
     $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
