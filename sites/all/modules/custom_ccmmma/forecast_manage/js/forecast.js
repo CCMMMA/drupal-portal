@@ -21,7 +21,7 @@ var api_url_base = "http://193.205.230.6";
         utc = (num.toString().length < 2 ? "0"+num : num ).toString();
         parameters['utc'] = utc;
         data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + '00';
-        parameters['data'] = data;
+        parameters['date'] = data;
 
         return parameters;
       }
@@ -31,7 +31,7 @@ var api_url_base = "http://193.205.230.6";
         setTimeout(function(){
           values = get_form_values();
           //console.log(values);
-          url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output']+"&date="+ values['data'];
+          url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/map?output="+values['output']+"&date="+ values['date'];
           //console.log(url_call);
 
           $.ajax({
@@ -46,11 +46,11 @@ var api_url_base = "http://193.205.230.6";
             $('#ajax-loader-marker').hide();
             if (data.map.link) {
               src_image = data.map.link;
-              //console.log(src_image);
+              console.log(src_image);
               $(".img-forecast").replaceWith("<img class='img-forecast' src='" + src_image + "'>");
-              $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/left/'+values['output']+'?width=64&height=563');
-              $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/right/'+values['output']+'?width=64&height=563');
-              $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/bottom/'+values['output']+'?width=64&height=73');
+              $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/left/'+values['output']+'?width=64&height=563&date='+values['date']);
+              $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
+              $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
             } else{
               $(".img-forecast").replaceWith("<p class='img-forecast'>No image</p>");
               $(".legend-left").attr("src", '');
