@@ -16,11 +16,12 @@ var api_url_base = "http://193.205.230.6";
         parameters['output'] = $('select[name=output]').val();
         parameters['switch'] = $('select[name=switch]').val();
         parameters['utc'] = $('select[name=utc]').val();
+        parameters['minutes'] = $('select[name=minutes]').val()*10;
         data = $('input[name=date]').val();
         num = parameters['utc'];
         utc = (num.toString().length < 2 ? "0"+num : num ).toString();
         parameters['utc'] = utc;
-        data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + '00';
+        data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + parameters['minutes'];
         parameters['date'] = data;
 
         return parameters;

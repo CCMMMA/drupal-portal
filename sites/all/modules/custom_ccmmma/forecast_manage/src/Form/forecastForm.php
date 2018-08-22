@@ -164,6 +164,14 @@ class forecastForm extends FormBase {
       '#default_value' => (int)$utc,
     );
 
+    $current_minutes = date('i');
+    $form['minutes'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Minutes'),
+      '#options' => ['00', '10', '20', '30', '40', '50'],
+      '#default_value' => floor($current_minutes/10),
+    );
+
     $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
 
     $form['switch'] = array(
@@ -245,6 +253,7 @@ class forecastForm extends FormBase {
     $output = $form_state->getValue('output');
     $date = $form_state->getValue('date');
     $utc = sprintf("%02d", $form_state->getValue('utc'));
+    $minutes = $form_state->getValue('minutes')*10;
 
 
     //recupero l'id del place dal nid ottenuto
@@ -253,7 +262,7 @@ class forecastForm extends FormBase {
     $id_place = $id_field->value;
 
     $date = str_replace('-', "", $date);
-    $final_date_now = $date.'Z'.$utc.'00';
+    $final_date_now = $date.'Z'.$utc.$minutes;
 
 
     $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now.'&utc='.$utc, 302));
