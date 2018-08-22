@@ -78,9 +78,13 @@ class forecastForm extends FormBase {
     
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $date = $_GET['date'];
-    }
-    if(isset($_GET['utc'])){
-      $utc = $_GET['utc'];
+      $date_strtotime = strtotime($date) - 7200; //-2 ore
+      $utc = date("H",$date_strtotime);
+      $current_minutes = date('i', $date_strtotime);
+    } else{
+      $date_strtotime = time();
+      $current_minutes = date('i');
+      $utc = date("H");
     }
 
     // load node entity of place
@@ -108,7 +112,7 @@ class forecastForm extends FormBase {
     }
 
 
-    $date_used = date("Y-m-d", strtotime($date)); //Y-m-d
+    $date_used = date("Y-m-d", $date_strtotime); //Y-m-d
     $date_form = $date_used;  //da utilizzare nel form
     $utc_list = range(0, 23);
     
@@ -164,7 +168,6 @@ class forecastForm extends FormBase {
       '#default_value' => (int)$utc,
     );
 
-    $current_minutes = date('i');
     $form['minutes'] = array(
       '#type' => 'select',
       '#title' => $this->t('Minutes'),
@@ -252,8 +255,9 @@ class forecastForm extends FormBase {
     $place_nid = $form_state->getValue('place');
     $output = $form_state->getValue('output');
     $date = $form_state->getValue('date');
-    $utc = sprintf("%02d", $form_state->getValue('utc'));
     $minutes = $form_state->getValue('minutes')*10;
+    $utc = $form_state->getValue('utc');
+
 
 
     //recupero l'id del place dal nid ottenuto
@@ -261,11 +265,13 @@ class forecastForm extends FormBase {
     $id_field = $node->get('field_id_place');
     $id_place = $id_field->value;
 
-    $date = str_replace('-', "", $date);
-    $final_date_now = $date.'Z'.$utc.$minutes;
+    // gestisco il formato della data
+    $date_strtotime = strtotime($date);
+    $part_date = date('Ymd', $date_strtotime);
+    $final_date_now = $part_date.'Z'.$utc.$minutes;
 
 
-    $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now.'&utc='.$utc, 302));
+    $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now, 302));
   }
   
   // Ajax Call for output

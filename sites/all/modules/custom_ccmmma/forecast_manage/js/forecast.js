@@ -90,7 +90,8 @@ var api_url_base = "http://193.205.230.6";
         parameters = get_form_values();
         forecast_type = parameters['switch'];
         if(forecast_type != 'forecast'){
-          args = 'product='+parameters['product'] + '&place=' + parameters['place'] + '&output=' + parameters['output'] + '&date=' + parameters['data'] + '&utc=' + parameters['utc'];
+          args = 'product='+parameters['product'] + '&place=' + parameters['place'] + '&output=' + parameters['output'] + '&date=' + parameters['date'];
+          console.log(parameters);
           $(window.location).attr('href', window.location.protocol + "//" + window.location.host + "/" + 'forecast/' + forecast_type + '?' + args);
         }
 
