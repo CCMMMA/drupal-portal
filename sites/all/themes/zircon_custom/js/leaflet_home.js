@@ -413,7 +413,7 @@ var api_url_base = "http://193.205.230.6";
       zoom = 4;
     }
 
-    data = data.replace('00', ora);
+    data = data.substring(0, 9) + ora;
 
     if (type == 'porti') {
       var geojsonURL = api_url_base + '/apps/owm/weather/harbours/{z}/{x}/{y}.geojson?date=' + data;
@@ -623,10 +623,10 @@ var api_url_base = "http://193.205.230.6";
           fields = data.fields;
 
           //data e ora corrente
-          data = $('.scelta-singola.selected').attr("data");
+          date = $('.scelta-singola.selected').attr("data");
           ora = $('.select-hour input').val();
           //todo gestire in base alle api
-          get_map('com', data, ora);
+          get_map('com', date, ora);
         });
 
 
