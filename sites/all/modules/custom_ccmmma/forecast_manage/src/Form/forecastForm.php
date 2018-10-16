@@ -62,11 +62,11 @@ class forecastForm extends FormBase {
     if(isset($_GET['place']) && !empty($_GET['place'])){
       $place_id = $_GET['place'];
     }
-    
+
     if(isset($_GET['output']) && !empty($_GET['output'])){
       $output = $_GET['output'];
     }
-    
+
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $date = $_GET['date'];
       $date_strtotime = strtotime($date) - 7200; //-2 ore
@@ -82,7 +82,10 @@ class forecastForm extends FormBase {
 
     // load node entity of place
     $place_node_default = $this->get_place_node_by_id($place_id);
-    
+    $id_field = $place_node_default->get('field_id_place');
+    $id_place = $id_field->value;
+
+
     //get default outputs of default product
     $url_get_outputs = $api.'/products/'.$prod.'/outputs';
     $client = \Drupal::httpClient();
@@ -108,8 +111,8 @@ class forecastForm extends FormBase {
     $date_used = date("Y-m-d", $date_strtotime); //Y-m-d
     $date_form = $date_used;  //da utilizzare nel form
     $utc_list = range(0, 23);
-    
-    
+
+
     /*************************/
 
     $form['place'] = array(
@@ -190,13 +193,13 @@ class forecastForm extends FormBase {
 
     //@todo gestire questi link
     $link_change_hour = '<div class="container-link"><p class="change-hour previous"><< (-1h) Previous</p><p class="change-hour next">(+1h) Next >></p></div>';
-    
+
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
 
     $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
 
-    $url_call = $api.'/products/'.$prod.'/forecast/'.$place_id.'/map?output='.$output.'&date='.$date_for_api;
+    $url_call = $api.'/products/'.$prod.'/forecast/'.$id_place.'/map?output='.$output.'&date='.$date_for_api;
 
     $client = \Drupal::httpClient();
 
@@ -223,12 +226,12 @@ class forecastForm extends FormBase {
     $markup_image = '<div class="row">';
     $markup_image .= $markup_legend_left . $img_result . $markup_legend_right . $markup_legend_bottom;
     $markup_image .= '</div>';
-   
 
-    
+
+
     $suffix_markup = $link_change_hour . $markup_image;
     $form['#suffix'] = $suffix_markup;
-    
+
     return $form;
   }
   /**
@@ -241,7 +244,7 @@ class forecastForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-   
+
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $product = $form_state->getValue('product');
     $place_nid = $form_state->getValue('place');
@@ -265,12 +268,12 @@ class forecastForm extends FormBase {
 
     $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now, 302));
   }
-  
+
   // Ajax Call for output
   public function ajax_populateOutput($form, FormStateInterface $form_state){
     $option_output = array();
     $response_ajax = new AjaxResponse();
-    
+
     //get option output of product
     $product = $form_state->getValue('product');
     $api = \Drupal::config('api.settings')->get('api');
@@ -278,9 +281,9 @@ class forecastForm extends FormBase {
     $client = \Drupal::httpClient();
     $request = $client->get($url_get_outputs);
     $response = json_decode($request->getBody());
-    
+
     //dpm($url_get_outputs);
-    
+
     foreach($response->outputs as $nome => $value){
       $option_output[$nome] = $value->en;
     }
@@ -295,11 +298,11 @@ class forecastForm extends FormBase {
     $response_ajax->addCommand(new ReplaceCommand('#edit-load-output', $form['output']));
     return $response_ajax;
   }
-  
+
   private function get_place_node_by_id($place_id){
     $query = \Drupal::entityQuery('node')
-    ->condition('status', 1)
-    ->condition('field_id_place', $place_id);
+      ->condition('status', 1)
+      ->condition('field_id_place', $place_id);
 
     $nids = $query->execute();
     $nid_value = array_values($nids);
