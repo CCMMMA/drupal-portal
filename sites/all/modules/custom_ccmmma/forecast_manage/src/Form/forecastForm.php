@@ -41,6 +41,7 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['#cache'] = ['max-age' => 0];
 
     //add forecast library
     $form['#attached']['library'][] = 'forecast_manage/forecast-library';
