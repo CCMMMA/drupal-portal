@@ -25,11 +25,11 @@ use Drupal\Core\Ajax\ReplaceCommand;
 
 use Drupal\Core\Ajax\AppendCommand;
 
-//Debug::enable();
-//ErrorHandler::register();
-//ExceptionHandler::register();
 
 class forecastForm extends FormBase {
+
+  private $products;
+
   /**
    * {@inheritdoc}
    */
@@ -86,7 +86,6 @@ class forecastForm extends FormBase {
     $id_field = $place_node_default->get('field_id_place');
     $id_place = $id_field->value;
 
-
     //get default outputs of default product
     $url_get_outputs = $api.'/products/'.$prod.'/outputs';
     $client = \Drupal::httpClient();
@@ -104,6 +103,9 @@ class forecastForm extends FormBase {
     $request = $client->get($url_get_products);
     $response = json_decode($request->getBody());
     $product_options = array();
+
+    $this->products = $response;
+
     foreach($response->products as $nome => $value){
       $product_options[$nome] = $value->desc->en;
     }
@@ -113,7 +115,8 @@ class forecastForm extends FormBase {
     $date_form = $date_used;  //da utilizzare nel form
     $utc_list = range(0, 23);
 
-
+    $form['#prefix'] = "<div class='form-ajax-reload'>";
+    $form['#suffix'] = "</div>";
     /*************************/
 
     $form['place'] = array(
@@ -168,7 +171,7 @@ class forecastForm extends FormBase {
     $form['minutes'] = array(
       '#type' => 'select',
       '#title' => $this->t('Minutes'),
-      '#options' => ['00', '10', '20', '30', '40', '50'],
+      '#options' => $this->getOptionsMinutesFromProduct($prod),
       '#default_value' => floor($current_minutes/10),
     );
 
@@ -296,7 +299,12 @@ class forecastForm extends FormBase {
       unset($form['output']['#default_value']);
     }
 
-    $response_ajax->addCommand(new ReplaceCommand('#edit-load-output', $form['output']));
+    $options_minutes = $this->getOptionsMinutesFromProduct($product);
+
+    $form['minutes']['#options'] = $options_minutes;
+
+
+    $response_ajax->addCommand(new ReplaceCommand('.form-ajax-reload', $form));
     return $response_ajax;
   }
 
@@ -310,6 +318,28 @@ class forecastForm extends FormBase {
     $nid =  array_shift($nid_value);
     $entity_place = Node::load($nid);
     return $entity_place;
+  }
+
+  private function getOptionsMinutesFromProduct($product){
+    $api = \Drupal::config('api.settings')->get('api');
+    $url = $api.'/products/'.$product;
+
+    $client = \Drupal::httpClient();
+    $request = $client->get($url);
+
+    $response = json_decode($request->getBody());
+    $timestep = $response->outputs->timestep;
+
+    $options_timestep_60 = ['00'];
+    $options_timestep_10 = ['00', '10', '20', '30', '40', '50'];
+
+    if($timestep == 60){
+      return $options_timestep_60;
+    } else {
+      return $options_timestep_10;
+
+    }
+
   }
 
 }

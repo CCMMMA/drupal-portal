@@ -5,7 +5,8 @@ var api_url_base = "http://193.205.230.6";
       //functions
       function get_form_values() {
         parameters = [];
-        place = $('#edit-place').val();
+        place = $('input[data-drupal-selector="edit-place"]').val();
+        //place = $('#edit-place').val();
         place = place.substring(
             place.lastIndexOf("- ") + 1,
             place.lastIndexOf("(")
