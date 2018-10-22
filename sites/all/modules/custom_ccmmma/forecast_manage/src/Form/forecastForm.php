@@ -330,8 +330,8 @@ class forecastForm extends FormBase {
     $response = json_decode($request->getBody());
     $timestep = $response->outputs->timestep;
 
-    $options_timestep_60 = ['00'];
-    $options_timestep_10 = ['00', '10', '20', '30', '40', '50'];
+    $options_timestep_60 = ['00' => '00'];
+    $options_timestep_10 = ['00' => '00', '10' => '10', '20' => '20', '30' => '30', '40' => '40', '50' => '50'];
 
     if($timestep == 60){
       return $options_timestep_60;
