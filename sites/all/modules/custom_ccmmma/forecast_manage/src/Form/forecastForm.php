@@ -76,7 +76,8 @@ class forecastForm extends FormBase {
     } else{
       //default case
       $date_strtotime = time();
-      $current_minutes = date('i');
+      //$current_minutes = date('i');
+      $current_minutes = 0;
       $utc = date("H");
       $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
     }
