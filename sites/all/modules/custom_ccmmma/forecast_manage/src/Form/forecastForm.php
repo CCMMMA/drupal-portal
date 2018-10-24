@@ -76,7 +76,6 @@ class forecastForm extends FormBase {
     } else{
       //default case
       $date_strtotime = time();
-      //$current_minutes = date('i');
       $current_minutes = 0;
       $utc = date("H");
       $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
@@ -196,6 +195,8 @@ class forecastForm extends FormBase {
 
     $form['#attributes']['class'][] = 'form-forecast';
 
+    $form['#suffix'] = "<div id='ajax-loader-marker' style='width: 100%; text-align: center; display: none'><img id='ajax_loader' style='width: 3%' src='/sites/all/themes/zircon_custom/images/ajax-loader.gif'></div>";
+
     //@todo gestire questi link
     $link_change_hour = '<div class="container-link"><p class="change-hour previous"><< (-1h) Previous</p><p class="change-hour next">(+1h) Next >></p></div>';
 
@@ -205,6 +206,7 @@ class forecastForm extends FormBase {
     $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
 
     $url_call = $api.'/products/'.$prod.'/forecast/'.$id_place.'/map?output='.$output.'&date='.$date_for_api;
+    dpm($url_call);
 
     $client = \Drupal::httpClient();
 
@@ -235,7 +237,7 @@ class forecastForm extends FormBase {
 
 
     $suffix_markup = $link_change_hour . $markup_image;
-    $form['#suffix'] = $suffix_markup;
+    $form['#suffix'] .= $suffix_markup;
 
     return $form;
   }

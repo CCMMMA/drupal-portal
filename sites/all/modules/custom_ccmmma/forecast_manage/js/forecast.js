@@ -102,17 +102,16 @@ var api_url_base = "http://193.205.230.6";
 
 
           $(document).once('body').each(function(){
-            //manage trobber
-            trobber_markup = "<div id='ajax-loader-marker' style='width: 100%; text-align: center; display: none'><img id='ajax_loader' style='width: 3%;' src="+ window.location.protocol + "//" + window.location.host + "/" +"sites/all/themes/zircon_custom/images/ajax-loader.gif></div>";
-            $('.img-forecast').before(trobber_markup);
           });
 
-          $('#forecast-form select').once('#forecast-form').each(function () {
-            $(this).change(function (event) {
+
+
+          $('.forecast-form.form-forecast select').once('.forecast-form').each(function () {
+            $(this).on('change', this, function (event) {
               if(event.target.name == 'switch'){
-               //console.log('switch');
-               //console.log(this);
-               redirect_to_forecast_type();
+                //console.log('switch');
+                //console.log(this);
+                redirect_to_forecast_type();
               } else {
                 $('#ajax-loader-marker').show();
                 replace_image(event.target.name);

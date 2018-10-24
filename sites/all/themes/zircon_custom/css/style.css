@@ -428,3 +428,13 @@ i.fa.fa-spinner.fa-spin{
     top: 34%;
     left: 49%;
     }
+
+
+#ajax-loader-marker{
+  display:none;
+  width: 100%;
+  text-align: center;
+}
+#ajax_loader{
+  width: 3%;
+}
