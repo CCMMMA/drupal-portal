@@ -163,7 +163,7 @@ class forecastForm extends FormBase {
 
     $form['utc'] = array(
       '#type' => 'select',
-      '#title' => $this->t('UTC (CET=UTC+2)'),
+      '#title' => $this->t('UTC (CET=UTC+1)'),
       '#options' => $utc_list,
       '#default_value' => (int)$utc,
     );
