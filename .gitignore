@@ -6,10 +6,11 @@
 .idea
 
 #Drupal Folder
-core
-/vendor/*
-modules/contrib/
+vendor
+sites/modules/*
 sites/default/*
+.idea
+libraries
 
 #Drupal Files
 .csslintrc
@@ -24,7 +25,13 @@ composer.lock
 index.php
 robots.txt
 update.php
+drupal.phar
 web.config
+composer.lock
+.eslintrc
+.gitattributes
+.htaccess
+
 
 #Theme
 
