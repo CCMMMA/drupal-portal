@@ -1,0 +1,5 @@
+name: Radar Manage CCMMMA
+description: 'Modulo per gestire i dati radar'
+type: module
+core: 8.x
+package: CCMMMA

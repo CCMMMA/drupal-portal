@@ -1,0 +1,7 @@
+
+radar-library:
+  varsion: 1.x
+  js:
+    js/radar.js: {}
+  dependencies:
+      - core/jquery

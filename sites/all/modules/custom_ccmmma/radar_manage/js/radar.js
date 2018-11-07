@@ -15,16 +15,15 @@ var api_url_base = "http://193.205.230.6";
 
         parameters['product'] = $('select[name=product]').val();
         parameters['output'] = $('select[name=output]').val();
-        parameters['switch'] = $('select[name=switch]').val();
+        //parameters['switch'] = $('select[name=switch]').val();
         parameters['utc'] = $('select[name=utc]').val();
-        //parameters['minutes'] = $('select[name=minutes]').val()*10;
+        parameters['minutes'] = $('select[name=minutes]').val()*10;
         parameters['mappa'] = $('select[name=mappa]').val();
         data = $('input[name=date]').val();
         num = parameters['utc'];
         utc = (num.toString().length < 2 ? "0"+num : num ).toString();
         parameters['utc'] = utc;
-        data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + '00';
-        //data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + parameters['minutes'];
+        data = data.replace(new RegExp('-', 'g'), '') + 'Z' + utc + parameters['minutes'];
         parameters['date'] = data;
 
         return parameters;
@@ -41,14 +40,14 @@ var api_url_base = "http://193.205.230.6";
           } else {
             tipomappa="map";
           }
-          url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/" + tipomappa +"?output="+values['output']+"&date="+ values['date'];
+          url_call = api_url_base + "/products/" + values['product'] + "/radar/" + values['place'] + "/" + tipomappa +"?output="+values['output']+"&date="+ values['date'];
 
           $.ajax({
             url: url_call,
             statusCode: {
               500: function() {
                 $('#ajax-loader-marker').hide();
-                $(".img-forecast").replaceWith("<p class='img-forecast'>Internal server error</p>");
+                $(".img-radar").replaceWith("<p class='img-radar'>Internal server error</p>");
               }
             }
           }).done(function (data) {
@@ -56,12 +55,12 @@ var api_url_base = "http://193.205.230.6";
             if (data.map.link) {
               src_image = data.map.link;
               console.log(src_image);
-              $(".img-forecast").replaceWith("<img class='img-forecast' src='" + src_image + "'>");
-              $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/left/'+values['output']+'?width=64&height=563&date='+values['date']);
-              $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
-              $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
+              $(".img-radar").replaceWith("<img class='img-radar' src='" + src_image + "'>");
+              $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/radar/legend/left/'+values['output']+'?width=64&height=563&date='+values['date']);
+              $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/radar/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
+              $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/radar/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
             } else{
-              $(".img-forecast").replaceWith("<p class='img-forecast'>No image</p>");
+              $(".img-radar").replaceWith("<p class='img-radar'>No image</p>");
               $(".legend-left").attr("src", '');
               $(".legend-right").attr("src", '');
               $(".legend-bottom").attr("src", '');
@@ -94,18 +93,13 @@ var api_url_base = "http://193.205.230.6";
 
       }
 
-      function redirect_to_forecast_type(){
+      function redirect_to_radar_type(){
         parameters = get_form_values();
-        forecast_type = parameters['switch'];
-        if(forecast_type != 'forecast'){
-          args = 'product='+parameters['product'] + '&place=' + parameters['place'] + '&output=' + parameters['output'] + '&date=' + parameters['date'];
-          $(window.location).attr('href', window.location.protocol + "//" + window.location.host + "/" + 'forecast/' + forecast_type + '?' + args);
-        }
 
       }
 
 
-      Drupal.behaviors.behaviors_forecast = {
+      Drupal.behaviors.behaviors_radar = {
         attach: function (context, settings) {
 
 
@@ -114,16 +108,10 @@ var api_url_base = "http://193.205.230.6";
 
 
 
-          $('.forecast-form.form-forecast select').once('.forecast-form').each(function () {
+          $('.radar-form.form-radar select').once('.radar-form').each(function () {
             $(this).on('change', this, function (event) {
-              if(event.target.name == 'switch'){
-                //console.log('switch');
-                //console.log(this);
-                redirect_to_forecast_type();
-              } else {
                 $('#ajax-loader-marker').show();
                 replace_image(event.target.name);
-              }
             });
 
 

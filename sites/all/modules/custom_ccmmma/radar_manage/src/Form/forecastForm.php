@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\forecast_manage\Form;
+namespace Drupal\radar_manage\Form;
 
 //namespace Drupal\Core\Ajax;
 
@@ -26,7 +26,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\AppendCommand;
 
 
-class forecastForm extends FormBase {
+class radarForm extends FormBase {
 
   private $products;
 
@@ -34,7 +34,7 @@ class forecastForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'forecast_form';
+    return 'radar_form';
   }
 
   /**
@@ -43,8 +43,8 @@ class forecastForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#cache'] = ['max-age' => 0];
 
-    //add forecast library
-    $form['#attached']['library'][] = 'forecast_manage/forecast-library';
+    //add radar library
+    $form['#attached']['library'][] = 'radar_manage/radar-library';
 
     // get url of api
     $api = \Drupal::config('api.settings')->get('api');
@@ -81,7 +81,7 @@ class forecastForm extends FormBase {
       $date = $_GET['date'];
       $date_strtotime = strtotime($date) - 7200; //-2 ore
       $utc = date("H",$date_strtotime);
-      $current_minutes = 0; //date('i', $date_strtotime);
+      $current_minutes = date('i', $date_strtotime);
     } else{
       //default case
       $date_strtotime = time();
@@ -116,9 +116,9 @@ class forecastForm extends FormBase {
     $this->products = $response;
 
     foreach($response->products as $nome => $value){
-      if ( !($nome=="rdr1" || $nome=="rdr2")) {
-        $product_options[$nome] = $value->desc->en;
-      }
+     if ($nome=="rdr1" || $nome=="rdr2") {
+      $product_options[$nome] = $value->desc->en;
+     }
     }
 
 
@@ -179,28 +179,19 @@ class forecastForm extends FormBase {
       '#default_value' => (int)$utc,
     );
 
-/*    $form['minutes'] = array(
+    $form['minutes'] = array(
       '#type' => 'select',
       '#title' => $this->t('Minutes'),
       '#options' => $this->getOptionsMinutesFromProduct($prod),
       '#default_value' => floor($current_minutes/10),
-    ); */
-
-    $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
-
-    $form['switch'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Change forecast type'),
-      '#options' => $forecast_type,
-      '#default_value' => 'forecast',
     );
 
-    $tmap_type = ['nonTecnical' => 'Non technical', 'technical' => 'Technical'];
+    $tmap_type = ['technical' => 'Technical', 'nonTecnical' => 'Non technical'];
     $form['mappa'] = array(
       '#type' => 'select',
       '#title' => $this->t('Change Map type'),
       '#options' => $tmap_type,
-      '#default_value' => 'nonTechnical',
+      '#default_value' => 'technical',
     );
 
     $form['submit'] = array(
@@ -212,7 +203,7 @@ class forecastForm extends FormBase {
     );
 
 
-    $form['#attributes']['class'][] = 'form-forecast';
+    $form['#attributes']['class'][] = 'form-radar';
 
     $form['#suffix'] = "<div id='ajax-loader-marker' style='width: 100%; text-align: center; display: none'><img id='ajax_loader' style='width: 3%' src='/sites/all/themes/zircon_custom/images/ajax-loader.gif'></div>";
 
@@ -224,7 +215,7 @@ class forecastForm extends FormBase {
 
     $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
 
-    $url_call = $api.'/products/'.$prod.'/forecast/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
+    $url_call = $api.'/products/'.$prod.'/radar/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
     dpm($url_call);
 
     $client = \Drupal::httpClient();
@@ -237,16 +228,16 @@ class forecastForm extends FormBase {
     if(isset($response->map->link)){
       $link_map = $response->map->link;
     }
-    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
-    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
-    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/bottom/gen?width=768&height=64&date='.$date.'"></div>';
+    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://193.205.230.6/products/'.$prod.'/radar/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
+    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://193.205.230.6/products/'.$prod.'/radar/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
+    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="http://193.205.230.6/products/'.$prod.'/radar/legend/bottom/gen?width=768&height=64&date='.$date.'"></div>';
 
     //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){
       $img_result = '<p>Impossibile caricare immagine</p>';
     }
     else{
-      $img_result = '<div class="col-lg-8"><img class="img-forecast" src="'.$link_map.'"></div>';
+      $img_result = '<div class="col-lg-8"><img class="img-radar" src="'.$link_map.'"></div>';
     }
 
     $markup_image = '<div class="row">';
@@ -276,7 +267,7 @@ class forecastForm extends FormBase {
     $place_nid = $form_state->getValue('place');
     $output = $form_state->getValue('output');
     $date = $form_state->getValue('date');
-    $minutes = '00'; //$form_state->getValue('minutes')*10;
+    $minutes = $form_state->getValue('minutes')*10;
     $utc = $form_state->getValue('utc');
     $mappa = $form_state->getValue('mappa');
     if ($mappa=='technical') {
@@ -296,7 +287,7 @@ class forecastForm extends FormBase {
     $final_date_now = $part_date.'Z'.$utc.$minutes;
 
 
-    $form_state->setResponse(new RedirectResponse('/forecast/forecast?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now, 302));
+    $form_state->setResponse(new RedirectResponse('/instruments/radar?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now, 302));
   }
 
   // Ajax Call for output
@@ -331,9 +322,9 @@ class forecastForm extends FormBase {
       unset($form['output']['#default_value']);
     }
 
-    //$options_minutes = $this->getOptionsMinutesFromProduct($product);
+    $options_minutes = $this->getOptionsMinutesFromProduct($product);
 
-    //$form['minutes']['#options'] = $options_minutes;
+    $form['minutes']['#options'] = $options_minutes;
 
 
     $response_ajax->addCommand(new ReplaceCommand('.form-ajax-reload', $form));

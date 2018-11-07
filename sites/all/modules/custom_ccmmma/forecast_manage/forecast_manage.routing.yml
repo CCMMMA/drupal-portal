@@ -1,4 +1,4 @@
-example.settings:
+forecast_manage.settings:
   path: '/forecast/forecast'
   defaults:
     _form: '\Drupal\forecast_manage\Form\forecastForm'

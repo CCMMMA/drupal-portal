@@ -1,0 +1,15 @@
+radar_manage.settings:
+  path: '/instruments/radar'
+  defaults:
+    _form: 'Drupal\radar_manage\Form\radarForm'
+    _title: 'Radar Data'
+  requirements:
+    _access: 'TRUE'
+    
+radar_manage.autocomplete:
+  path: '/instruments/autocomplete'
+  defaults:
+    _controller: '\Drupal\radar_manage\Controller\ExampleController::autocomplete'
+    _title: 'Radar Autocomplete'
+  requirements:
+    _permission: 'access content'
