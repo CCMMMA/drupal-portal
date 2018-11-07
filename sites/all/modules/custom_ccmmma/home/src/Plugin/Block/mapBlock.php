@@ -23,9 +23,17 @@ class mapBlock extends BlockBase {
   public function build() {
     $api = \Drupal::config('api.settings')->get('api');
     $url_wrf_golfo_napoli = $api.'/products/wrf5/forecast/ca001/map';
-    $url_ww3_golfo_napoli = $api.'/products/ww33/forecast/ca001/map';
-    $url_chimere_golfo_napoli = $api.'/products/chm3/forecast/ca001/map?output=gen';
-    
+    //$url_ww3_golfo_napoli = $api.'/products/ww33/forecast/ca001/map';
+    $url_rms3_golfo_napoli = $api.'/products/rms3/forecast/ca001/map';
+    //$url_chimere_golfo_napoli = $api.'/products/chm3/forecast/ca001/map?output=gen';
+    $date_strtotime = time();
+    $current_minutes = date("M");
+    $utc = date("H")-1;
+    $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
+    $date_strtotime = strtotime($date);
+    $date_used = date("Y-m-d", $date_strtotime); //Y-m-d
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
+    $url_radar_golfo_napoli = $api.'/products/rdr1/forecast/ca000/map?output=gen&date='.$date_for_api;
     
     $client = new \GuzzleHttp\Client();
         try{
@@ -42,7 +50,7 @@ class mapBlock extends BlockBase {
     
     $client1 = new \GuzzleHttp\Client();
     try{
-    $request = $client1->get($url_ww3_golfo_napoli, ['http_errors' => false]);
+    $request = $client1->get($url_rms3_golfo_napoli, ['http_errors' => false]);
     $response = json_decode($request->getBody());
     	if(isset($response->map->link)){
 	    	$url_img_ww3 = $response->map->link;
@@ -56,7 +64,7 @@ class mapBlock extends BlockBase {
     
     $client2 = new \GuzzleHttp\Client();
     try{
-    $request = $client2->get($url_chimere_golfo_napoli, ['http_errors' => false]);
+    $request = $client2->get($url_radar_golfo_napoli, ['http_errors' => false]);
     $response = json_decode($request->getBody());
     	if(isset($response->map->link)){
 	    	$url_img_chm = $response->map->link;
@@ -66,6 +74,7 @@ class mapBlock extends BlockBase {
     } catch(RequestException $e){
 		$url_img_chm = '';
 	}
+
     //elenco di date disponibili
     $markup = '';
     
@@ -114,7 +123,7 @@ class mapBlock extends BlockBase {
     
     <div class="mapid" id="mapid-com">&nbsp;</div>';
     
-    $markup .= ' 
+/*    $markup .= ' 
     <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>   
       <select class="selectpicker">
         <option>CA</option>
@@ -124,7 +133,7 @@ class mapBlock extends BlockBase {
         <option>VET</option>
         <option>EURO</option>
         <option>PORTI</option>
-      </select>';
+      </select>'; */
   
     $markup .= '
     
@@ -141,15 +150,15 @@ class mapBlock extends BlockBase {
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
     <div class="ww3-title style_title">Mare</div>
     
-    <div class="img-box"><a href="/forecast/forecast?product=ww33&place=ca000"><img id="imgfor" src="'.$url_img_ww3.'" /></a></div>
+    <div class="img-box"><a href="/forecast/forecast?product=rms3&place=ca000"><img id="imgfor" src="'.$url_img_ww3.'" /></a></div>
     </div>
     </div>
     
     <div class="col-md-4 chimere">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="chimere-title style_title">Aria</div>
+    <div class="chimere-title style_title">Radar</div>
     
-    <div class="img-box"><a href="/forecast/forecast?product=chm3&place=ca000"><img id="imgfor" src="'.$url_img_chm.'" /></a>
+    <div class="img-box"><a href="/instruments/radar?product=rdr13&place=ca000"><img id="imgfor" src="'.$url_img_chm.'" /></a>
      <!--<img id="bar_right" src="http://blackjeans.uniparthenope.it/prods/getbar.php?model=chm3&amp;position=v&amp;output=caqi" />-->
     </div>
     </div>

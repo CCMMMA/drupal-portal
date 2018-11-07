@@ -273,6 +273,13 @@ p.select-language a:hover{
 .forecast-form.form-forecast .form-item label{
   width: 100%;
 }
+.radar-form.form-radar .form-item, #radar-table-form .form-item-place{
+  display: inline-block;
+}
+
+.radar-form.form-radar .form-item label{
+  width: 100%;
+}
 
 p.change-hour{
   cursor: pointer;
@@ -285,6 +292,9 @@ div.container-link{
 
 }
 .img-forecast{
+  width: 100%;
+}
+.img-radar{
   width: 100%;
 }
 #box {

@@ -7,7 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 
 class homeController extends ControllerBase {
   public function content() {
-    $markup = '<div class="type-of-place"> 
+/*    $markup = '<div class="type-of-place"> 
                 <p class="label-search">Type of place: </p>
                 <!--<div class="scelta-singola selected" data="all"><p>ALL</p></div>-->
                 <div class="scelta-singola" data="ca"><p>CA</p></div>
@@ -20,7 +20,7 @@ class homeController extends ControllerBase {
                 <!--<div class="scelta-singola" data="other"><p>OTHER</p></div>-->
                 
               </div>
-    ';
+    '; */ $markup="";
     $markup .= '<div id="mapid-com" class="mapid"></div>';
     return array(
         '#type' => 'markup',
