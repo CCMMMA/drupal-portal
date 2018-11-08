@@ -32,6 +32,9 @@ class forecastTableForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
+    $form['#cache'] = ['max-age' => 0];
+
+
     $form['#attached']['library'][] = 'home/home-library';
 
 

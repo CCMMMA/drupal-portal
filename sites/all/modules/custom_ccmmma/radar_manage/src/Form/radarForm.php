@@ -2,8 +2,6 @@
 
 namespace Drupal\radar_manage\Form;
 
-//namespace Drupal\Core\Ajax;
-
 use Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -216,7 +214,6 @@ class radarForm extends FormBase {
     $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
 
     $url_call = $api.'/products/'.$prod.'/radar/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
-    dpm($url_call);
 
     $client = \Drupal::httpClient();
 
