@@ -1,5 +1,5 @@
 radar_manage.settings:
-  path: '/instruments/radar'
+  path: '/instruments/radar-form'
   defaults:
     _form: 'Drupal\radar_manage\Form\radarForm'
     _title: 'Radar Data'
