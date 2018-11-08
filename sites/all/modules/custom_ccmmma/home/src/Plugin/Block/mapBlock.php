@@ -31,7 +31,7 @@ class mapBlock extends BlockBase {
     $utc = date("H")-1;
     $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
     $date_strtotime = strtotime($date);
-    $date_used = date("Y-m-d", $date_strtotime); //Y-m-d
+    $date_form = date("Y-m-d", $date_strtotime); //Y-m-d
     $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
     $url_radar_golfo_napoli = $api.'/products/rdr1/forecast/ca000/map?output=gen&date='.$date_for_api;
     
