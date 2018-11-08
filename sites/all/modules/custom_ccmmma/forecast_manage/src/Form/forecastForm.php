@@ -60,14 +60,20 @@ class forecastForm extends FormBase {
       $prod = $_GET['product'];
     }
 
-    if(isset($_GET['mappa']) && !empty($_GET['mappa'])){
+    if(isset($_GET['mappa']) && !empty($_GET['mappa'])) {
       $mappa = $_GET['mappa'];
+
+      if ($mappa == 'technical') {
+        $tipomappa = "plot";
+      }
+      else {
+        $tipomappa = "map";
+      };
+    } else{
+      $tipomappa = "map";
     }
-    if ($mappa=='technical') {
-	$tipomappa="plot"; 
-    } else {
-	$tipomappa="map";
-    };
+
+
 
     if(isset($_GET['place']) && !empty($_GET['place'])){
       $place_id = $_GET['place'];

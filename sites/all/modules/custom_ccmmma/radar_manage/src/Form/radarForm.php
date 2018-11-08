@@ -58,14 +58,18 @@ class radarForm extends FormBase {
       $prod = $_GET['product'];
     }
 
-    if(isset($_GET['mappa']) && !empty($_GET['mappa'])){
+    if (isset($_GET['mappa']) && !empty($_GET['mappa'])) {
       $mappa = $_GET['mappa'];
+      if ($mappa == 'technical') {
+        $tipomappa = "plot";
+      }
+      else {
+        $tipomappa = "map";
+      };
+    } else{
+      $tipomappa = "map";
     }
-    if ($mappa=='technical') {
-	$tipomappa="plot"; 
-    } else {
-	$tipomappa="map";
-    };
+
 
     if(isset($_GET['place']) && !empty($_GET['place'])){
       $place_id = $_GET['place'];
@@ -96,7 +100,7 @@ class radarForm extends FormBase {
     //get default outputs of default product
     $url_get_outputs = $api.'/products/'.$prod.'/outputs';
     $client = \Drupal::httpClient();
-    $request = $client->get($url_get_outputs);
+    $request = $client->get($url_get_outputs, ['http_errors' => FALSE]);
     $response = json_decode($request->getBody());
     $output_options = array();
     foreach($response->outputs as $nome => $value){
@@ -107,7 +111,7 @@ class radarForm extends FormBase {
     $api = \Drupal::config('api.settings')->get('api');
     $url_get_products = $api.'/products';
     $client = \Drupal::httpClient();
-    $request = $client->get($url_get_products);
+    $request = $client->get($url_get_products, ['http_errors' => FALSE]);
     $response = json_decode($request->getBody());
     $product_options = array();
 
@@ -213,7 +217,7 @@ class radarForm extends FormBase {
 
     $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
 
-    $url_call = $api.'/products/'.$prod.'/radar/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
+    $url_call = $api.'/products/rdr1/forecast/'.$prod.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
 
     $client = \Drupal::httpClient();
 
