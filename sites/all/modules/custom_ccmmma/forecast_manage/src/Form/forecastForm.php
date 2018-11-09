@@ -81,7 +81,7 @@ class forecastForm extends FormBase {
 
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $date = $_GET['date'];
-      $date_strtotime = strtotime($date) - 7200; //-2 ore
+      $date_strtotime = strtotime($date);
       $utc = date("H",$date_strtotime);
       $current_minutes = 0; //date('i', $date_strtotime);
     } else{
@@ -89,7 +89,7 @@ class forecastForm extends FormBase {
       $date_strtotime = time();
       $current_minutes = 0;
       $utc = date("H");
-      $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
+      $date = date('Ymd\Z', time()).$utc.sprintf("%2d",floor($current_minutes/10)*10);
     }
 
     // load node entity of place
@@ -218,13 +218,23 @@ class forecastForm extends FormBase {
 
     $form['#suffix'] = "<div id='ajax-loader-marker' style='width: 100%; text-align: center; display: none'><img id='ajax_loader' style='width: 3%' src='/sites/all/themes/zircon_custom/images/ajax-loader.gif'></div>";
 
-    //@todo gestire questi link
-    $link_change_hour = '<div class="container-link"><p class="change-hour previous"><< (-1h) Previous</p><p class="change-hour next">(+1h) Next >></p></div>';
+    $ldate = strtotime($date_form) + $utc*3600;
+    $pdate = date("Ymd\ZHi",$ldate-3600);
+    $ldate = date("Ymd\ZHi",$ldate+3600);
+    $base_url = '/forecast/forecast?product='.$prod.'&place='.$id_place.'&mappa='.$mappa.'&output='.$output.'&date=';
+
+    // + o - un'ora
+    $link_change_hour = '<div class="container-link">';
+    $link_change_hour .=   '<p class="change-hour previous">';
+    $link_change_hour .=       '<a href="' .$base_url.$pdate. '"><< (-1h) Previous</a></p>';
+    $link_change_hour .=   '<p class="change-hour next">';
+    $link_change_hour .=       '<a href="' .$base_url.$ldate. '">(+1h) Next >></a></p>';
+    $link_change_hour .='</div>';
 
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
 
-    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.sprintf("%2d",floor($current_minutes/10)*10);
 
     $url_call = $api.'/products/'.$prod.'/forecast/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
     dpm($url_call);

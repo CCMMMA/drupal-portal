@@ -49,8 +49,8 @@ class radarForm extends FormBase {
 
 
     //Default value
-    $prod = 'wrf5';
-    $place_id = 'com63049'; // reg15
+    $prod = 'rdr1';
+    $place_id = 'ca0000'; // reg15
     $output = 'gen';
 
     // get data from args
@@ -89,7 +89,7 @@ class radarForm extends FormBase {
       $date_strtotime = time();
       $current_minutes = 0;
       $utc = date("H");
-      $date = date('Ymd\Z', time()).$utc.floor($current_minutes/10)*10;
+      $date = date('Ymd\Z', time()).$utc.sprintf("%2d",floor($current_minutes/10)*10);
     }
 
     // load node entity of place
@@ -209,13 +209,24 @@ class radarForm extends FormBase {
 
     $form['#suffix'] = "<div id='ajax-loader-marker' style='width: 100%; text-align: center; display: none'><img id='ajax_loader' style='width: 3%' src='/sites/all/themes/zircon_custom/images/ajax-loader.gif'></div>";
 
-    //@todo gestire questi link
-    $link_change_hour = '<div class="container-link"><p class="change-hour previous"><< (-1h) Previous</p><p class="change-hour next">(+1h) Next >></p></div>';
+    $ldate = strtotime($date_form) + $utc*3600 + $current_minutes;
+    $pdate = date("Ymd\ZHi",$ldate-3600);
+    $ldate = date("Ymd\ZHi",$ldate+3600);
+    $base_url = '/instruments/radar-form?product='.$prod.'&place='.$id_place.'&mappa='.$mappa.'&output='.$output.'&date=';
+
+    // + o - un'ora
+    $link_change_hour = '<div class="container-link">';
+    $link_change_hour .=   '<p class="change-hour previous">';
+    $link_change_hour .=       '<a href="' .$base_url.$pdate. '"><< (-1h) Previous</a></p>';
+    $link_change_hour .=   '<p class="change-hour next">';
+    $link_change_hour .=       '<a href="' .$base_url.$ldate. '">(+1h) Next >></a></p>';
+    $link_change_hour .='</div>';
+
 
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
 
-    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.floor($current_minutes/10)*10;
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.sprintf("%2d",floor($current_minutes/10)*10);
 
     $url_call = $api.'/products/rdr1/forecast/'.$prod.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
 
@@ -229,9 +240,9 @@ class radarForm extends FormBase {
     if(isset($response->map->link)){
       $link_map = $response->map->link;
     }
-    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://193.205.230.6/products/'.$prod.'/radar/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
-    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://193.205.230.6/products/'.$prod.'/radar/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
-    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="http://193.205.230.6/products/'.$prod.'/radar/legend/bottom/gen?width=768&height=64&date='.$date.'"></div>';
+    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
+    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
+    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="http://193.205.230.6/products/'.$prod.'/forecast/legend/bottom/gen?width=768&height=64&date='.$date.'"></div>';
 
     //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){
@@ -288,7 +299,7 @@ class radarForm extends FormBase {
     $final_date_now = $part_date.'Z'.$utc.$minutes;
 
 
-    $form_state->setResponse(new RedirectResponse('/instruments/radar?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now, 302));
+    $form_state->setResponse(new RedirectResponse('/instruments/radar-form?product='.$product.'&place='.$id_place.'&output='.$output.'&date='.$final_date_now, 302));
   }
 
   // Ajax Call for output
