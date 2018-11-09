@@ -140,25 +140,25 @@ class mapBlock extends BlockBase {
     <div class="row" style="margin-top: 16px;">
     <div class="col-md-4 wrf">
     <div style="border: 1px solid black; margin-top:2px; text-align:center;">
-    <div class="wrf-title style_title">Meteo</div>
+    <div class="wrf-title style_title"><a class="attendi" title="go to weather forecast..." href="/forecast/forecast?product=wrf5&place=ca000">Meteo</a></div>
     
-    <div class="img-box"><a href="/forecast/forecast?product=wrf5&place=ca000"><img id="imgfor" src="'.$url_img_wrf.'" /></a></div>
+    <div class="img-box"><a class="attendi"  title="go to weather forecast..." href="/forecast/forecast?product=wrf5&place=ca000"><img id="imgfor" src="'.$url_img_wrf.'" /></a></div>
     </div>
     </div>
     
     <div class="col-md-4 ww3">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="ww3-title style_title">Mare</div>
+    <div class="ww3-title style_title"><a class="attendi" title="go to sea forecast..." href="/forecast/forecast?product=rms3&place=ca000">Sea</a></div>
     
-    <div class="img-box"><a href="/forecast/forecast?product=rms3&place=ca000"><img id="imgfor" src="'.$url_img_ww3.'" /></a></div>
+    <div class="img-box"><a class="attendi" title="go to sea forecast..." href="/forecast/forecast?product=rms3&place=ca000"><img id="imgfor" src="'.$url_img_ww3.'" /></a></div>
     </div>
     </div>
     
     <div class="col-md-4 chimere">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="chimere-title style_title">Radar</div>
+    <div class="chimere-title style_title"><a class="attendi" title="go to radar chart..." href="/instruments/radar-form?product=rdr1&place=ca000">Radar</a></div>
     
-    <div class="img-box"><a href="/instruments/radar?product=rdr13&place=ca000"><img id="imgfor" src="'.$url_img_chm.'" /></a>
+    <div class="img-box"><a class="attendi" title="go to radar chart..." href="/instruments/radar-form?product=rdr1&place=ca000"><img id="imgfor" src="'.$url_img_chm.'" /></a>
      <!--<img id="bar_right" src="http://blackjeans.uniparthenope.it/prods/getbar.php?model=chm3&amp;position=v&amp;output=caqi" />-->
     </div>
     </div>

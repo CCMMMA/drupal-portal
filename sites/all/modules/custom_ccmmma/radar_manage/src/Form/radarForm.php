@@ -52,6 +52,7 @@ class radarForm extends FormBase {
     $prod = 'rdr1';
     $place_id = 'ca0000'; // reg15
     $output = 'gen';
+    $mappa = "nonTechnical";
 
     // get data from args
     if(isset($_GET['product']) && !empty($_GET['product'])){
