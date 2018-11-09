@@ -40,7 +40,7 @@ var api_url_base = "http://193.205.230.6";
           } else {
             tipomappa="map";
           }
-          url_call = api_url_base + "/products/" + values['product'] + "/radar/" + values['place'] + "/" + tipomappa +"?output="+values['output']+"&date="+ values['date'];
+          url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/" + tipomappa +"?output="+values['output']+"&date="+ values['date'];
 
           $.ajax({
             url: url_call,
@@ -56,9 +56,9 @@ var api_url_base = "http://193.205.230.6";
               src_image = data.map.link;
               console.log(src_image);
               $(".img-radar").replaceWith("<img class='img-radar' src='" + src_image + "'>");
-              $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/radar/legend/left/'+values['output']+'?width=64&height=563&date='+values['date']);
-              $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/radar/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
-              $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/radar/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
+              $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/left/'+values['output']+'?width=64&height=563&date='+values['date']);
+              $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
+              $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
             } else{
               $(".img-radar").replaceWith("<p class='img-radar'>No image</p>");
               $(".legend-left").attr("src", '');

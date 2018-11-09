@@ -90,7 +90,7 @@ class radarForm extends FormBase {
       $date_strtotime = time();
       $current_minutes = 0;
       $utc = date("H");
-      $date = date('Ymd\Z', time()).$utc.sprintf("%2d",floor($current_minutes/10)*10);
+      $date = date('Ymd\Z', time()).$utc.sprintf("%02d",floor($current_minutes/10)*10);
     }
 
     // load node entity of place
@@ -189,7 +189,7 @@ class radarForm extends FormBase {
       '#default_value' => floor($current_minutes/10),
     );
 
-    $tmap_type = ['technical' => 'Technical', 'nonTecnical' => 'Non technical'];
+    $tmap_type = ['nonTecnical' => 'Non technical', 'technical' => 'Technical'];
     $form['mappa'] = array(
       '#type' => 'select',
       '#title' => $this->t('Change Map type'),
@@ -227,9 +227,9 @@ class radarForm extends FormBase {
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
 
-    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.sprintf("%2d",floor($current_minutes/10)*10);
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).sprintf("%02d",$utc).sprintf("%02d",floor($current_minutes/10)*10);
 
-    $url_call = $api.'/products/rdr1/forecast/'.$prod.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
+    $url_call = $api.'/products/'.$prod.'/forecast/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
 
     $client = \Drupal::httpClient();
 
@@ -247,7 +247,7 @@ class radarForm extends FormBase {
 
     //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){
-      $img_result = '<p>Impossibile caricare immagine</p>';
+      $img_result = '<p>Impossibile caricare immagine: url_call='.$url_call.' </p>';
     }
     else{
       $img_result = '<div class="col-lg-8"><img class="img-radar" src="'.$link_map.'"></div>';
