@@ -1,4 +1,4 @@
-var api_url_base = "http://193.205.230.6";
+var api_url_base = "http://api.uniparthenope.it"; //193.205.230.6";
 
 (function ($, Drupal, drupalSettings) {
   //functions

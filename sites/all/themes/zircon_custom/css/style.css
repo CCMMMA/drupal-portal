@@ -28,7 +28,7 @@ ul.links {
     list-style-type: none !important;
 }
 header#header{
-    //background-image: url("http://192.167.9.43/sites/all/themes/zircon_custom/background-top.jpg");
+    //background-image: url("https://meteo.uniparthenope.it/sites/all/themes/zircon_custom/background-top.jpg");
     //background-repeat: no-repeat;
     //background-size: cover;
 }
@@ -45,7 +45,7 @@ header#header #slideshow .container{
 }
 
 footer#footer{
-    background-image: url("http://192.167.9.43/sites/all/themes/zircon_custom/background-bottom.jpg");
+    background-image: url("https://meteo.uniparthenope.it/sites/all/themes/zircon_custom/background-bottom.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;

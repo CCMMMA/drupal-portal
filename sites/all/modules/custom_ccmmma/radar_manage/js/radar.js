@@ -1,5 +1,5 @@
 
-var api_url_base = "http://193.205.230.6";
+var api_url_base = "http://api.meteo.uniparthenope.it";
 
 (function ($, Drupal, drupalSettings) {
       //functions

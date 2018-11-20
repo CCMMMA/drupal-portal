@@ -51,7 +51,7 @@
     var meteo_condition = cloudy1_png;
     
     var markerClusters = L.markerClusterGroup();     
-    $.getJSON("http://192.167.9.43/sites/default/files/places_data.json",function(data){
+    $.getJSON("https://meteo.uniparthenope.it/sites/default/files/places_data.json",function(data){
           for ( var i = 0; i < data.length; ++i )  //Processo tutti i place ottenuti
           {
             var id_place = data[i].properties.id_place;

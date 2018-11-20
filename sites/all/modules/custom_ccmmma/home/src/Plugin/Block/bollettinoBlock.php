@@ -105,7 +105,7 @@ class bollettinoBlock extends BlockBase {
     $data = [];
 
     // intestazione tabella
-    $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="http://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div>';
+    $markup .= '    <div id="box">  <div class="title">Meteo Comune di Napoli    <a href="https://meteo.uniparthenope.it" target="_blank" title="meteo.uniparthenope.it">    </a>  </div>';
 
     // gestisco i campi da visualizzare
     foreach($fields as $field => $display){
@@ -187,7 +187,7 @@ class bollettinoBlock extends BlockBase {
     $markup .= '
         </tbody>
     </table>
-    <div class="meteo.ink">  <a href="http://meteo.uniparthenope.it" target="_blank" title="Meteo">    CCMMMA: http://meteo.uniparthenope.it  </a>  <br>  ©2013  <a href="http://meteo.uniparthenope.it/" title="Meteo siti web" target="_blank">    <b>meteo.uniparthenope.it</b> - <b>CCMMMA</b> Università Parthenope  </a>  </div></div>';
+    <div class="meteo.ink">  <a href="https://meteo.uniparthenope.it" target="_blank" title="Meteo">    CCMMMA: https://meteo.uniparthenope.it  </a>  <br>  ©2013  <a href="https://meteo.uniparthenope.it/" title="Meteo siti web" target="_blank">    <b>meteo.uniparthenope.it</b> - <b>CCMMMA</b> Università Parthenope  </a>  </div></div>';
 
 
 
