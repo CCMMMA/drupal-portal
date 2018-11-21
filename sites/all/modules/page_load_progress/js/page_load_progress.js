@@ -28,6 +28,11 @@
           setTimeout(lockScreen, delay);
         });
       }
+      // alberto inizio
+      $('.attendi').on("click", function() {
+        setTimeout(lockScreen, delay);
+      });
+      // alberto fine
 
       // Add the throbber for internal links only if requested in the UI.
       if (internal_links) {

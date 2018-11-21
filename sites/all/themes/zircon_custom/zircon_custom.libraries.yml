@@ -8,6 +8,7 @@ global-styling-custom:
       js/markercluster/css/MarkerCluster.css: {}
       js/markercluster/css/MarkerCluster.Default.css: {}
       js/leaflet-loading/src/Control.Loading.css: {}
+      js/leaflet-velocity/dist/leaflet-velocity.css: {}
   js:
     js/lightbox/js/lightbox.js: {}
     js/leaflet/leaflet.js: {}
@@ -21,6 +22,7 @@ global-styling-custom:
     js/leafletspin/leaflet.spin.js: {}
     js/leafletspin/spin.js: {}
     js/leaflet-loading/src/Control.Loading.js: {}
+    js/leaflet-velocity/dist/leaflet-velocity.js: {}
     #js/markercluster/MarkerCluster.Spiderfier.js: {}
     js/markercluster/MarkerClusterGroup.js: {}
     js/markercluster/MarkerClusterGroup.Refresh.js: {}

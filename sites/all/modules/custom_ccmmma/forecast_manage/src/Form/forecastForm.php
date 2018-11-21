@@ -249,9 +249,9 @@ class forecastForm extends FormBase {
     if(isset($response->map->link)){
       $link_map = $response->map->link;
     }
-    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="http://api.meteo.uniparthenope.it/products/'.$prod.'/forecast/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
-    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="http://api.meteo.uniparthenope.it/products/'.$prod.'/forecast/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
-    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="http://api.meteo.uniparthenope.it/products/'.$prod.'/forecast/legend/bottom/gen?width=768&height=64&date='.$date.'"></div>';
+    $markup_legend_left = '<div class="col-lg-2"><img class="legend-left" src="https://api.meteo.uniparthenope.it/products/'.$prod.'/forecast/legend/left/gen?width=64&height=563&date='.$date.'"></div>';
+    $markup_legend_right = '<div class="col-lg-2"><img class="legend-right" src="https://api.meteo.uniparthenope.it/products/'.$prod.'/forecast/legend/right/gen?width=64&height=563&date='.$date.'"></div>';
+    $markup_legend_bottom = '<div class="col-lg-8 col-lg-offset-2"><img class="legend-bottom" src="https://api.meteo.uniparthenope.it/products/'.$prod.'/forecast/legend/bottom/gen?width=768&height=64&date='.$date.'"></div>';
 
     //dpm('link alla mappa: '.$link_map);
     if($link_map === NULL){

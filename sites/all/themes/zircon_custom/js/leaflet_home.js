@@ -1,4 +1,4 @@
-var api_url_base = "http://api.uniparthenope.it"; //193.205.230.6";
+var api_url_base = "https://api.meteo.uniparthenope.it"; //193.205.230.6";
 
 (function ($, Drupal, drupalSettings) {
   //functions
@@ -605,7 +605,22 @@ var api_url_base = "http://api.uniparthenope.it"; //193.205.230.6";
       //console.log(map.getZoom());
     });
 
+    // load data (u, v grids) from somewhere (e.g. https://github.com/danwild/wind-js-server)
+    $.getJSON(api_url_base+'/products/wrf5/forecast/d01/grib/json', function (data) {
 
+        var velocityLayer = L.velocityLayer({
+                displayValues: true,
+                displayOptions: {
+                        velocityType: 'GBR Wind',
+                        displayPosition: 'bottomleft',
+                        displayEmptyString: 'No wind data'
+                },
+                data: data,
+                maxVelocity: 10
+        });
+
+        map.addLayer(velocityLayer);
+    });
   }
 
   Drupal.behaviors.behaviors_leaflet = {
