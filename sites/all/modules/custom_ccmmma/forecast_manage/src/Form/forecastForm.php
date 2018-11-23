@@ -79,6 +79,9 @@ class forecastForm extends FormBase {
       $output = $_GET['output'];
     }
 
+    // alberto
+    date_default_timezone_set("UTC");
+
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $date = $_GET['date'];
       $date_strtotime = strtotime($date);
@@ -89,7 +92,7 @@ class forecastForm extends FormBase {
       $date_strtotime = time();
       $current_minutes = 0;
       $utc = date("H");
-      $date = date('Ymd\Z', time()).$utc.sprintf("%2d",floor($current_minutes/10)*10);
+      $date = date('Ymd\Z', time()).$utc.sprintf("%02d",floor($current_minutes/10)*10);
     }
 
     // load node entity of place
@@ -202,7 +205,7 @@ class forecastForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Change Map type'),
       '#options' => $tmap_type,
-      '#default_value' => 'nonTechnical',
+      '#default_value' => $mappa,
     );
 
     $form['submit'] = array(
@@ -234,7 +237,7 @@ class forecastForm extends FormBase {
     //get data from url for generate img
     $api = \Drupal::config('api.settings')->get('api');
 
-    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.sprintf("%2d",floor($current_minutes/10)*10);
+    $date_for_api = date('Ymd\Z', strtotime($date_form)).$utc.sprintf("%02d",floor($current_minutes/10)*10);
 
     $url_call = $api.'/products/'.$prod.'/forecast/'.$id_place.'/'.$tipomappa.'?output='.$output.'&date='.$date_for_api;
     dpm($url_call);
@@ -301,6 +304,9 @@ class forecastForm extends FormBase {
     $node = \Drupal\node\Entity\Node::load($place_nid);
     $id_field = $node->get('field_id_place');
     $id_place = $id_field->value;
+
+    // alberto
+    date_default_timezone_set("UTC");
 
     // gestisco il formato della data
     $date_strtotime = strtotime($date);

@@ -80,9 +80,12 @@ class radarForm extends FormBase {
       $output = $_GET['output'];
     }
 
+    // alberto
+    date_default_timezone_set("UTC");
+
     if(isset($_GET['date']) && !empty($_GET['date'])){
       $date = $_GET['date'];
-      $date_strtotime = strtotime($date) - 7200; //-2 ore
+      $date_strtotime = strtotime($date); //-2 ore
       $utc = date("H",$date_strtotime);
       $current_minutes = date('i', $date_strtotime);
     } else{
@@ -189,12 +192,12 @@ class radarForm extends FormBase {
       '#default_value' => floor($current_minutes/10),
     );
 
-    $tmap_type = ['nonTecnical' => 'Non technical', 'technical' => 'Technical'];
+    $tmap_type = ['technical' => 'Technical', 'nonTechnical' => 'Non technical'];
     $form['mappa'] = array(
       '#type' => 'select',
       '#title' => $this->t('Change Map type'),
       '#options' => $tmap_type,
-      '#default_value' => 'technical',
+      '#default_value' => $mappa,
     );
 
     $form['submit'] = array(
@@ -293,6 +296,9 @@ class radarForm extends FormBase {
     $node = \Drupal\node\Entity\Node::load($place_nid);
     $id_field = $node->get('field_id_place');
     $id_place = $id_field->value;
+
+    // alberto
+    date_default_timezone_set("UTC");
 
     // gestisco il formato della data
     $date_strtotime = strtotime($date);
