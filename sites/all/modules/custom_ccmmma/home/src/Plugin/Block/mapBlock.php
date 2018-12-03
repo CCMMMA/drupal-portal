@@ -123,7 +123,7 @@ class mapBlock extends BlockBase {
     
     <div class="mapid" id="mapid-com">&nbsp;</div>';
     
-/*    $markup .= ' 
+    $markup .= ' 
     <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>   
       <select class="selectpicker">
         <option>CA</option>
@@ -133,7 +133,7 @@ class mapBlock extends BlockBase {
         <option>VET</option>
         <option>EURO</option>
         <option>PORTI</option>
-      </select>'; */
+      </select>'; 
   
     $markup .= '
     

@@ -47,6 +47,8 @@ class radarForm extends FormBase {
     // get url of api
     $api = \Drupal::config('api.settings')->get('api');
 
+    // da modificare
+    $lingua = 'en';
 
     //Default value
     $prod = 'rdr1';
@@ -102,14 +104,10 @@ class radarForm extends FormBase {
     $id_place = $id_field->value;
 
     //get default outputs of default product
-    $url_get_outputs = $api.'/products/'.$prod.'/outputs';
-    $client = \Drupal::httpClient();
-    $request = $client->get($url_get_outputs, ['http_errors' => FALSE]);
-    $response = json_decode($request->getBody());
-    $output_options = array();
-    foreach($response->outputs as $nome => $value){
-      $output_options[$nome] = $value->en;
-    }
+//    $url_get_outputs = $api.'/products/'.$prod.'/outputs';
+//    $client = \Drupal::httpClient();
+//    $request = $client->get($url_get_outputs, ['http_errors' => FALSE]);
+//    $response = json_decode($request->getBody());
 
     //recupero tutti i products disponibili
     $api = \Drupal::config('api.settings')->get('api');
@@ -118,12 +116,21 @@ class radarForm extends FormBase {
     $request = $client->get($url_get_products, ['http_errors' => FALSE]);
     $response = json_decode($request->getBody());
     $product_options = array();
+    $output_options = array();
+    $passo_minuti = ['00' => '00'];
+
 
     $this->products = $response;
 
     foreach($response->products as $nome => $value){
      if ($nome=="rdr1" || $nome=="rdr2") {
-      $product_options[$nome] = $value->desc->en;
+      $product_options[$nome] = $value->desc->$lingua;
+      if ($nome == $prod) {
+        foreach($value->outputs as $nome => $value){
+          $output_options[$nome] = $value->$lingua;
+        }
+        $passo_minuti = $this->getOptionsMinutesFromTimestep($value->timestep);
+      }
      }
     }
 
@@ -188,7 +195,7 @@ class radarForm extends FormBase {
     $form['minutes'] = array(
       '#type' => 'select',
       '#title' => $this->t('Minutes'),
-      '#options' => $this->getOptionsMinutesFromProduct($prod),
+      '#options' => $passo_minuti, //$this->getOptionsMinutesFromProduct($prod),
       '#default_value' => floor($current_minutes/10),
     );
 
@@ -341,7 +348,8 @@ class radarForm extends FormBase {
       unset($form['output']['#default_value']);
     }
 
-    $options_minutes = $this->getOptionsMinutesFromProduct($product);
+    //$options_minutes = $this->getOptionsMinutesFromProduct($product);
+    $options_minutes = $this->getOptionsMinutesFromTimeStep($response->timestep);
 
     $form['minutes']['#options'] = $options_minutes;
 
@@ -362,6 +370,19 @@ class radarForm extends FormBase {
     return $entity_place;
   }
 
+  private function getOptionsMinutesFromTimestep($timestep){
+    $options_timestep_60 = ['00' => '00'];
+    $options_timestep_10 = ['00' => '00', '10' => '10', '20' => '20', '30' => '30', '40' => '40', '50' => '50'];
+
+    if($timestep == 60){
+      return $options_timestep_60;
+    } else {
+      return $options_timestep_10;
+
+    }
+  }
+
+/*
   private function getOptionsMinutesFromProduct($product){
     $api = \Drupal::config('api.settings')->get('api');
     $url = $api.'/products/'.$product;
@@ -383,7 +404,7 @@ class radarForm extends FormBase {
     }
 
   }
-
+*/
 }
 
 

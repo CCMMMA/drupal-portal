@@ -49,6 +49,8 @@ class forecastForm extends FormBase {
     // get url of api
     $api = \Drupal::config('api.settings')->get('api');
 
+    // da modificare
+    $lingua = 'en';
 
     //Default value
     $prod = 'wrf5';
@@ -101,7 +103,7 @@ class forecastForm extends FormBase {
     $id_place = $id_field->value;
 
     //get default outputs of default product
-    $url_get_outputs = $api.'/products/'.$prod.'/outputs';
+/*    $url_get_outputs = $api.'/products/'.$prod.'/outputs';
     $client = \Drupal::httpClient();
     $request = $client->get($url_get_outputs);
     $response = json_decode($request->getBody());
@@ -109,7 +111,7 @@ class forecastForm extends FormBase {
     foreach($response->outputs as $nome => $value){
       $output_options[$nome] = $value->en;
     }
-
+*/
     //recupero tutti i products disponibili
     $api = \Drupal::config('api.settings')->get('api');
     $url_get_products = $api.'/products';
@@ -117,13 +119,21 @@ class forecastForm extends FormBase {
     $request = $client->get($url_get_products);
     $response = json_decode($request->getBody());
     $product_options = array();
+    $output_options = array();
+    $passo_minuti = ['00' => '00'];
 
     $this->products = $response;
 
     foreach($response->products as $nome => $value){
-      if ( !($nome=="rdr1" || $nome=="rdr2")) {
+      //if ( !($nome=="rdr1" || $nome=="rdr2")) {
         $product_options[$nome] = $value->desc->en;
+      if ($nome == $prod) {
+        foreach($value->outputs as $nome => $value){
+          $output_options[$nome] = $value->$lingua;
+        }
+        //$passo_minuti = $this->getOptionsMinutesFromTimestep($value->timestep);
       }
+      //}
     }
 
 
@@ -370,7 +380,7 @@ class forecastForm extends FormBase {
     $entity_place = Node::load($nid);
     return $entity_place;
   }
-
+/*
   private function getOptionsMinutesFromProduct($product){
     $api = \Drupal::config('api.settings')->get('api');
     $url = $api.'/products/'.$product;
@@ -392,5 +402,5 @@ class forecastForm extends FormBase {
     }
 
   }
-
+*/
 }
