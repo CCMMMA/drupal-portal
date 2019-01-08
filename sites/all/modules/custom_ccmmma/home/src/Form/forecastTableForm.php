@@ -90,11 +90,11 @@ class forecastTableForm extends FormBase {
       '#button_type' => 'primary',
     );
 
-    $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
+    $forecast_type = ['forecast' => 'Maps', 'table' => 'Table'];
 
     $form['switch'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Change forecast type'),
+      '#title' => $this->t('Change visualization type'),
       '#options' => $forecast_type,
       '#default_value' => 'table',
     );

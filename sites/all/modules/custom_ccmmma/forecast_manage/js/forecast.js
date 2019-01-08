@@ -60,6 +60,8 @@ var api_url_base = "https://api.meteo.uniparthenope.it";
               $(".legend-left").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/left/'+values['output']+'?width=64&height=563&date='+values['date']);
               $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
               $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
+              appoggio=$("#menounoh").attr("href");	// sostituire mappa=xx
+              appoggio=$("#piuunoh").attr("href");
             } else{
               $(".img-forecast").replaceWith("<p class='img-forecast'>No image</p>");
               $(".legend-left").attr("src", '');
@@ -96,12 +98,13 @@ var api_url_base = "https://api.meteo.uniparthenope.it";
 
       function redirect_to_forecast_type(){
         parameters = get_form_values();
-        forecast_type = parameters['switch'];
-        if(forecast_type != 'forecast'){
+        forecast_type = parameters['mappa'];
+        if(forecast_type == 'table'){
           args = 'product='+parameters['product'] + '&place=' + parameters['place'] + '&output=' + parameters['output'] + '&date=' + parameters['date'];
           $(window.location).attr('href', window.location.protocol + "//" + window.location.host + "/" + 'forecast/' + forecast_type + '?' + args);
+	  return 0;
         }
-
+	return 1;
       }
 
 
@@ -116,14 +119,16 @@ var api_url_base = "https://api.meteo.uniparthenope.it";
 
           $('.forecast-form.form-forecast select').once('.forecast-form').each(function () {
             $(this).on('change', this, function (event) {
-              if(event.target.name == 'switch'){
+              var chefare=1;
+              if(event.target.name == 'mappa'){
                 //console.log('switch');
                 //console.log(this);
-                redirect_to_forecast_type();
-              } else {
+                chefare=redirect_to_forecast_type();
+              } 
+	      if (chefare==1) {
                 $('#ajax-loader-marker').show();
-                replace_image(event.target.name);
-              }
+                replace_image(event.target.name);              
+	      }
             });
 
 

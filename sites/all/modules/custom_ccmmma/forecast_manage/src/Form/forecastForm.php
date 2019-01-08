@@ -202,18 +202,18 @@ class forecastForm extends FormBase {
     ); */
 
     $forecast_type = ['forecast' => 'Forecast', 'table' => 'Table'];
-
+/* alberto
     $form['switch'] = array(
       '#type' => 'select',
       '#title' => $this->t('Change forecast type'),
       '#options' => $forecast_type,
       '#default_value' => 'forecast',
-    );
+    ); */
 
-    $tmap_type = ['nonTecnical' => 'Non technical', 'technical' => 'Technical'];
+    $tmap_type = ['nonTecnical' => 'Non technical', 'technical' => 'Technical', 'table' => 'Table'];
     $form['mappa'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Change Map type'),
+      '#title' => $this->t('Change Visualization type'),
       '#options' => $tmap_type,
       '#default_value' => $mappa,
     );
@@ -239,9 +239,9 @@ class forecastForm extends FormBase {
     // + o - un'ora
     $link_change_hour = '<div class="container-link">';
     $link_change_hour .=   '<p class="change-hour previous">';
-    $link_change_hour .=       '<a href="' .$base_url.$pdate. '"><< (-1h) Previous</a></p>';
+    $link_change_hour .=       '<a id="menounoh" href="' .$base_url.$pdate. '"><< (-1h) Previous</a></p>';
     $link_change_hour .=   '<p class="change-hour next">';
-    $link_change_hour .=       '<a href="' .$base_url.$ldate. '">(+1h) Next >></a></p>';
+    $link_change_hour .=       '<a id="piuunoh" href="' .$base_url.$ldate. '">(+1h) Next >></a></p>';
     $link_change_hour .='</div>';
 
     //get data from url for generate img
