@@ -29,17 +29,31 @@ var api_url_base = "https://api.meteo.uniparthenope.it";
 
         return parameters;
       }
-
+      function replaceUrlParam(url, paramName, paramValue)
+      {
+          if (paramValue == null) {
+              paramValue = '';
+          }
+          var pattern = new RegExp('\\b('+paramName+'=).*?(&|#|$)');
+          if (url.search(pattern)>=0) {
+              return url.replace(pattern,'$1' + paramValue + '$2');
+          }
+          url = url.replace(/[?#]$/,'');
+          return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue;
+      }
       function replace_image(id_trigged_element) {
         values = [];
         setTimeout(function(){
           values = get_form_values();
           //console.log(values);
           tipomappa="map";
+          mappa="nonTechnical";
           if (values['mappa']=="technical") {
             tipomappa="plot";
+            mappa="technical";
           } else {
             tipomappa="map";
+            mappa="nonTechnical";
           }
           url_call = api_url_base + "/products/" + values['product'] + "/forecast/" + values['place'] + "/" + tipomappa +"?output="+values['output']+"&date="+ values['date'];
 
@@ -61,8 +75,10 @@ var api_url_base = "https://api.meteo.uniparthenope.it";
               $(".legend-right").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/right/'+values['output']+'?width=64&height=563&date='+values['date']);
               $(".legend-bottom").attr("src", api_url_base+'/products/'+ values['product']+'/forecast/legend/bottom/'+values['output']+'?width=64&height=73&date='+values['date']);
               appoggio=$("#menounoh").attr("href");	// sostituire mappa=xx
+              $("#menounoh").attr("href",replaceUrlParam(appoggio,"mappa",mappa));
               appoggio=$("#piuunoh").attr("href");
-            } else{
+              $("#piuunoh").attr("href",replaceUrlParam(appoggio,"mappa",mappa));
+             } else{
               $(".img-forecast").replaceWith("<p class='img-forecast'>No image</p>");
               $(".legend-left").attr("src", '');
               $(".legend-right").attr("src", '');
