@@ -1,0 +1,9 @@
+name: Radar Animation Block
+type: module
+description: 'Drupal 8 Block Module that animate last radar images'
+package: CCMMMA
+version: 8.x
+core: 8.x
+dependencies:
+  - node
+  - block

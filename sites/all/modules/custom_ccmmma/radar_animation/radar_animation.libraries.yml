@@ -1,0 +1,10 @@
+radar_animation-lib:
+  version: 1.x
+  css:
+    theme:
+      css/anima.css: {}
+  js:
+    js/anima.js: {}
+  dependencies:
+    - core/jquery
+

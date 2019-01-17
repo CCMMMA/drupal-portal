@@ -22,9 +22,9 @@ class mapBlock extends BlockBase {
    */
   public function build() {
     $api = \Drupal::config('api.settings')->get('api');
-    $url_wrf_golfo_napoli = $api.'/products/wrf5/forecast/ca001/map';
+    $url_wrf_golfo_napoli = $api.'/products/wrf5/forecast/reg15/plot';
     //$url_ww3_golfo_napoli = $api.'/products/ww33/forecast/ca001/map';
-    $url_rms3_golfo_napoli = $api.'/products/rms3/forecast/ca001/map';
+    $url_rms3_golfo_napoli = $api.'/products/rms3/forecast/reg15/plot';
     //$url_chimere_golfo_napoli = $api.'/products/chm3/forecast/ca001/map?output=gen';
     $date_strtotime = time();
     $current_minutes = date("M");
@@ -33,7 +33,7 @@ class mapBlock extends BlockBase {
     $date_strtotime = strtotime($date);
     $date_form = date("Y-m-d", $date_strtotime); //Y-m-d
     $date_for_api = date('Ymd\Z', strtotime($date_form)).sprintf("%02d",$utc).sprintf("%02d",floor($current_minutes/10)*10);
-    $url_radar_golfo_napoli = $api.'/products/rdr1/forecast/ca000/map?output=gen&date='.$date_for_api;
+    $url_radar_golfo_napoli = $api.'/products/rdr1/forecast/reg15/plot?output=gen&date='.$date_for_api;
     
     $client = new \GuzzleHttp\Client();
         try{
@@ -140,7 +140,7 @@ class mapBlock extends BlockBase {
     <div class="row" style="margin-top: 16px;">
     <div class="col-md-4 wrf">
     <div style="border: 1px solid black; margin-top:2px; text-align:center;">
-    <div class="wrf-title style_title"><a class="attendi" title="go to weather forecast..." href="/forecast/forecast?product=wrf5&place=ca000">Meteo</a></div>
+    <div class="wrf-title style_title"><a class="attendi" title="go to weather forecast..." href="/forecast/forecast?product=wrf5&place=ca000&mappa=technical">Meteo</a></div>
     
     <div class="img-box"><a class="attendi"  title="go to weather forecast..." href="/forecast/forecast?product=wrf5&place=ca000"><img id="imgfor" src="'.$url_img_wrf.'" /></a></div>
     </div>
@@ -148,7 +148,7 @@ class mapBlock extends BlockBase {
     
     <div class="col-md-4 ww3">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="ww3-title style_title"><a class="attendi" title="go to sea forecast..." href="/forecast/forecast?product=rms3&place=ca000">Sea</a></div>
+    <div class="ww3-title style_title"><a class="attendi" title="go to sea forecast..." href="/forecast/forecast?product=rms3&place=ca000&mappa=technical">Sea</a></div>
     
     <div class="img-box"><a class="attendi" title="go to sea forecast..." href="/forecast/forecast?product=rms3&place=ca000"><img id="imgfor" src="'.$url_img_ww3.'" /></a></div>
     </div>
@@ -156,7 +156,7 @@ class mapBlock extends BlockBase {
     
     <div class="col-md-4 chimere">
     <div style="border: 1px solid black; margin-top:2px;  text-align:center;">
-    <div class="chimere-title style_title"><a class="attendi" title="go to radar chart..." href="/instruments/radar-form?product=rdr1&place=ca000">Radar</a></div>
+    <div class="chimere-title style_title"><a class="attendi" title="go to radar chart..." href="/instruments/radar-form?product=rdr1&place=ca000&mappa=technical">Radar</a></div>
     
     <div class="img-box"><a class="attendi" title="go to radar chart..." href="/instruments/radar-form?product=rdr1&place=ca000"><img id="imgfor" src="'.$url_img_chm.'" /></a>
      <!--<img id="bar_right" src="http://blackjeans.uniparthenope.it/prods/getbar.php?model=chm3&amp;position=v&amp;output=caqi" />-->

@@ -1,0 +1,13 @@
+      .animando {
+        position: relative;
+        width: 100%;
+      }
+      .animando img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        visibility: visible;
+        width: 100%
+      }
+
