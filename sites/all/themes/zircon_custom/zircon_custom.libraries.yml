@@ -9,6 +9,7 @@ global-styling-custom:
       js/markercluster/css/MarkerCluster.Default.css: {}
       js/leaflet-loading/src/Control.Loading.css: {}
       js/leaflet-velocity/dist/leaflet-velocity.css: {}
+      js/webapi/webapi.min.css: {}
   js:
     js/lightbox/js/lightbox.js: {}
     js/leaflet/leaflet.js: {}
@@ -29,6 +30,7 @@ global-styling-custom:
     js/markercluster/MarkerOpacity.js: {}
     js/markercluster/leaflet.markercluster.js: {}
     js/moment.js: {}
+    js/webapi/webapi.min.no-dep.js: {}
     js/leaflet_home.js: {}
     js/change_hour.js: {}
 
